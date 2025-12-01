@@ -1,3 +1,5 @@
+import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
+
 {
   /*
     このComponentは以下の機能を担当する。
