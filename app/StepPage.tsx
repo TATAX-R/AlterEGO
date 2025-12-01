@@ -1,10 +1,11 @@
+// StepPage.tsx
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Button, Text } from 'react-native';
 import { Pedometer } from 'expo-sensors';
-// コンポーネントの読み込みパスを修正しました (../../components/...)
-import { StepVisualizer } from '../../components/StepVisualizer';
+// さっき作ったコンポーネントを読み込む
+import { StepVisualizer } from '../components/StepVisualizer'; // ※パスが違う場合は修正してください
 
-export default function HomeScreen() {
+export default function StepPage() {
   const [currentSteps, setCurrentSteps] = useState(0);
   const [isWalking, setIsWalking] = useState(false);
   const GOAL_STEPS = 8000;
@@ -17,7 +18,7 @@ export default function HomeScreen() {
         subscription = Pedometer.watchStepCount((result) => {
           setCurrentSteps(result.steps);
           setIsWalking(true);
-
+          // 2秒後に停止判定
           if ((global as any).stopTimer) clearTimeout((global as any).stopTimer);
           (global as any).stopTimer = setTimeout(() => {
             setIsWalking(false);
@@ -33,10 +34,10 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.page}>
-      {/* あなたが作った表示コンポーネント */}
+      {/* 子コンポーネントを表示 */}
       <StepVisualizer currentSteps={currentSteps} goalSteps={GOAL_STEPS} isWalking={isWalking} />
 
-      {/* 開発用デバッグボタン */}
+      {/* 開発用デバッグボタン（完成したら消す） */}
       <View style={styles.debugArea}>
         <Text style={styles.debugText}>開発用メニュー</Text>
         <Button
