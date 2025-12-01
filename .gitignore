@@ -41,3 +41,13 @@ app-example
 # generated native folders
 /ios
 /android
+
+# ========================================
+# 歩数機能開発用（実験用ファイル - コミット不要）
+# ========================================
+# 動作確認用のページ（UIライブラリ・ルーティング未確定のため）
+app/StepPage.tsx
+# ドキュメント（ローカル用）
+docs/
+guide.md
+SUBMIT_GUIDE.md
