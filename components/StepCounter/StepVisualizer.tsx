@@ -39,27 +39,36 @@ export const StepVisualizer = ({ goalSteps = 8000 }: StepVisualizerProps) => {
 
     const subscribe = async () => {
       const isAvailable = await Pedometer.isAvailableAsync();
-
-      if (isAvailable) {
-        // アプリを開いた瞬間、今日の「累計歩数」を取りに行く
-        await fetchTodaySteps();
-
-        // リアルタイムで歩数を監視
-        const start = new Date();
-        start.setHours(0, 0, 0, 0);
-
-        subscription = Pedometer.watchStepCount(async () => {
-          // 歩くたびに「今日のトータル」を再取得（確実な方法）
-          try {
-            const updated = await Pedometer.getStepCountAsync(start, new Date());
-            if (updated) {
-              setCurrentSteps(updated.steps);
-            }
-          } catch (error) {
-            console.log('リアルタイム歩数取得エラー:', error);
-          }
-        });
+      if (!isAvailable) {
+        console.log('歩数計センサーが利用できません');
+        return;
       }
+
+      // ★ 権限をリクエスト（これがないと動かない！）
+      const { status } = await Pedometer.requestPermissionsAsync();
+      if (status !== 'granted') {
+        console.log('歩数計の権限が拒否されました');
+        return;
+      }
+
+      // アプリを開いた瞬間、今日の「累計歩数」を取りに行く
+      await fetchTodaySteps();
+
+      // リアルタイムで歩数を監視
+      const start = new Date();
+      start.setHours(0, 0, 0, 0);
+
+      subscription = Pedometer.watchStepCount(async () => {
+        // 歩くたびに「今日のトータル」を再取得（確実な方法）
+        try {
+          const updated = await Pedometer.getStepCountAsync(start, new Date());
+          if (updated) {
+            setCurrentSteps(updated.steps);
+          }
+        } catch (error) {
+          console.log('リアルタイム歩数取得エラー:', error);
+        }
+      });
     };
 
     subscribe();
