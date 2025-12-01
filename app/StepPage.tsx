@@ -6,7 +6,6 @@ import { StepVisualizer } from '../components/StepVisualizer';
 
 export default function StepPage() {
   const [currentSteps, setCurrentSteps] = useState(0);
-  const [isWalking, setIsWalking] = useState(false);
   const GOAL_STEPS = 8000;
   const appState = useRef(AppState.currentState);
 
@@ -53,12 +52,6 @@ export default function StepPage() {
           } catch (error) {
             console.log('リアルタイム歩数取得エラー:', error);
           }
-
-          setIsWalking(true);
-          if ((global as any).stopTimer) clearTimeout((global as any).stopTimer);
-          (global as any).stopTimer = setTimeout(() => {
-            setIsWalking(false);
-          }, 2000);
         });
       }
     };
@@ -83,7 +76,7 @@ export default function StepPage() {
 
   return (
     <View style={styles.page}>
-      <StepVisualizer currentSteps={currentSteps} goalSteps={GOAL_STEPS} isWalking={isWalking} />
+      <StepVisualizer currentSteps={currentSteps} goalSteps={GOAL_STEPS} />
     </View>
   );
 }
