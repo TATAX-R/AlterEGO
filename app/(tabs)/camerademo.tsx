@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Button, Image, StyleSheet, View, Alert } from 'react-native';
+import { Image, StyleSheet, View, Alert } from 'react-native';
+import Button from '@/components/button';
 import * as ImagePicker from 'expo-image-picker';
 
 export default function App() {
@@ -36,10 +37,21 @@ export default function App() {
   return (
     <View style={styles.container}>
       {/* 画像がある場合は表示する */}
-      {image && <Image source={{ uri: image }} style={styles.image} />}
+      {image && (
+        <View>
+          <Image source={{ uri: image }} style={styles.image} />
+          <Button
+            label="画像を送信する"
+            onPress={() => {
+              console.log('送信テスト1:ボタンのpushを確認');
+            }}
+            theme="primary"
+          />
+        </View>
+      )}
 
       {/* このボタンを押すと takePhoto 関数が発火 */}
-      <Button title="カメラを起動する" onPress={takePhoto} />
+      <Button label="カメラを起動する" onPress={takePhoto} theme="primary" />
     </View>
   );
 }
