@@ -1,45 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, TouchableOpacity, Modal, View, StyleSheet, Animated, Easing } from 'react-native';
-import Svg, { Polygon, Circle, Line } from 'react-native-svg';
+import { Text, TouchableOpacity, View, StyleSheet, Animated, Easing } from 'react-native';
+import Svg, { Polygon, Line } from 'react-native-svg';
 
-export type DiseaseType =
-  | 'obesity' // 肥満
-  | 'diabetes' // 糖尿病
-  | 'hypertension' // 高血圧
-  | 'dyslipidemia' // 脂質異常症
-  | 'gout' // 痛風
-  | 'other';
+import { DiseaseType, HealthStats } from '@/types/index';
+import { diseaseData } from '@/constants/diseases';
 
-export type HealthStats = {
-  [key in DiseaseType]: number;
-};
+// ラベルキー配列
+const labelKeys: DiseaseType[] = ['obesity', 'diabetes', 'hypertension', 'dyslipidemia', 'gout'];
 
-// サンプルデータ
-const patientHealth: HealthStats = {
-  obesity: 75,
-  diabetes: 60,
-  hypertension: 80,
-  dyslipidemia: 55,
-  gout: 40,
-  other: 0,
-};
-
-// ラベル詳細コンポーネント
-interface LabelDetailProps {
-  labelKey: DiseaseType;
-  displayLabel: string;
-  value: number;
-  onClose: () => void;
-}
+// disease.tsから表示ラベルを取得
+const displayLabels: string[] = labelKeys.map((key) => diseaseData[key].name);
 
 // カスタムレーダーチャートコンポーネント
 interface CustomRadarChartProps {
   data: number[];
   labels: string[];
-  labelKeys: string[];
+  labelKeys: DiseaseType[];
   maxValue: number;
   size?: number;
-  onLabelPress?: (labelKey: string, index: number) => void;
+  onLabelPress?: (labelKey: DiseaseType, index: number) => void;
 }
 
 function CustomRadarChart({
@@ -193,29 +172,13 @@ function CustomRadarChart({
   );
 }
 
-export default function RadarChartView() {
-  const [selectedKey, setSelectedKey] = useState<DiseaseType | null>(null);
+interface RadarChartViewProps {
+  stats: HealthStats;
+}
 
-  const displayLabels: string[] = ['肥満', '糖尿病', '高血圧', '脂質異常症', '痛風'];
-  const labelKeys: DiseaseType[] = ['obesity', 'diabetes', 'hypertension', 'dyslipidemia', 'gout'];
-  const data = [
-    patientHealth.obesity,
-    patientHealth.diabetes,
-    patientHealth.hypertension,
-    patientHealth.dyslipidemia,
-    patientHealth.gout,
-  ];
-
-  // 英語キーから日本語ラベルを取得
-  const getDisplayLabel = (key: DiseaseType): string => {
-    const index = labelKeys.indexOf(key);
-    return index >= 0 ? displayLabels[index] : key;
-  };
-
-  // 選択されたキーの値を取得
-  const getValueForKey = (key: DiseaseType): number => {
-    return patientHealth[key] ?? 0;
-  };
+export default function RadarChartView({ stats }: RadarChartViewProps) {
+  // HealthStatsからデータを取得
+  const data = labelKeys.map((key) => stats[key]);
 
   return (
     <View style={styles.container}>
@@ -224,7 +187,11 @@ export default function RadarChartView() {
         labels={displayLabels}
         labelKeys={labelKeys}
         maxValue={100}
-        onLabelPress={(key) => setSelectedKey(key as DiseaseType)}
+        onLabelPress={(key) => {
+          // 選択された病気の情報をコンソールに出力
+          const diseaseInfo = diseaseData[key];
+          console.log('Selected disease:', key, diseaseInfo);
+        }}
       />
     </View>
   );
