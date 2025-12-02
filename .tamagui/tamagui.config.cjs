@@ -23790,7 +23790,6 @@ var bodyFont = createInterFont(
 );
 var appConfig = createTamagui({
   animations,
-  // 作成したアニメーション定義を渡す
   defaultTheme: "light",
   shouldAddPrefersColorThemes: false,
   themeClassNameOnRoot: false,

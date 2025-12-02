@@ -19,6 +19,7 @@
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
     "@tamagui/animations-react-native": "^1.138.6",
+    "@tamagui/cli": "^1.138.6",
     "@tamagui/config": "^1.138.6",
     "@tamagui/font-inter": "^1.138.6",
     "@tamagui/metro-plugin": "^1.138.6",
@@ -48,6 +49,7 @@
     "tamagui": "^1.138.6"
   },
   "devDependencies": {
+    "@tamagui/babel-plugin": "^1.138.6",
     "@types/react": "~19.1.0",
     "eslint": "^9.39.1",
     "eslint-config-expo": "~10.0.0",
