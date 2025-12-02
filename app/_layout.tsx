@@ -1,10 +1,9 @@
-import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { TamaguiProvider, Theme } from 'tamagui';
+import { TamaguiProvider } from 'tamagui';
 
 import config from '../tamagui.config';
 
@@ -21,13 +20,13 @@ export default function RootLayout() {
   }
 
   return (
-    <TamaguiProvider config={config} defaultTheme={colorScheme as any}>
+    <TamaguiProvider config={config} defaultTheme={colorScheme ?? 'light'}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         {/* スタックナビゲーションの設定 */}
         <Stack>
           <Stack.Screen name="index" options={{ title: 'Home' }} />
           {/* もし (tabs) フォルダがあるなら以下も有効にしてください */}
-          {/<Stack.Screen name="(tabs)" options={{ headerShown: false }} />}
+          {<Stack.Screen name="(tabs)" options={{ headerShown: false }} />}
         </Stack>
 
         <StatusBar style="auto" />
