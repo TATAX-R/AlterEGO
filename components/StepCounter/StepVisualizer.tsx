@@ -6,19 +6,19 @@ import { AppConfig } from '@/constants/AppConfig';
 
 // Props型定義
 type StepVisualizerProps = {
-  goalSteps?: number; // デフォルト: AppConfig.DEFAULT_GOAL_STEPS
+  targetSteps?: number; // デフォルト: AppConfig.DEFAULT_TARGET_STEPS
 };
 
 export const StepVisualizer = ({
-  goalSteps = AppConfig.DEFAULT_GOAL_STEPS,
+  targetSteps = AppConfig.DEFAULT_TARGET_STEPS,
 }: StepVisualizerProps) => {
-  const { currentSteps, progress } = useStepCounter({ goalSteps });
+  const { stepData, progress } = useStepCounter({ targetSteps });
 
   return (
     <View style={styles.container}>
       {/* 1. 上部のメッセージ（ゲージの上） */}
       <Text style={styles.message}>
-        {currentSteps >= goalSteps ? '目標達成！🎉' : 'もっと歩こう...'}
+        {stepData.todaySteps >= stepData.targetSteps ? '目標達成！🎉' : 'もっと歩こう...'}
       </Text>
 
       {/* 2. 横向きプログレスバー */}
@@ -38,8 +38,8 @@ export const StepVisualizer = ({
 
       {/* 4. 歩数表示（一番下） */}
       <View style={styles.stepsContainer}>
-        <Text style={styles.stepsText}>{currentSteps.toLocaleString()}</Text>
-        <Text style={styles.stepsLabel}>/ {goalSteps.toLocaleString()} 歩</Text>
+        <Text style={styles.stepsText}>{stepData.todaySteps.toLocaleString()}</Text>
+        <Text style={styles.stepsLabel}>/ {stepData.targetSteps.toLocaleString()} 歩</Text>
       </View>
     </View>
   );

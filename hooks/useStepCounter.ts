@@ -2,19 +2,26 @@ import { useState, useEffect, useRef } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 import { Pedometer } from 'expo-sensors';
 import { AppConfig } from '@/constants/AppConfig';
+import { StepData } from '@/types';
 
 type UseStepCounterOptions = {
-  goalSteps?: number;
+  targetSteps?: number;
 };
 
 export const useStepCounter = (options: UseStepCounterOptions = {}) => {
-  const { goalSteps = AppConfig.DEFAULT_GOAL_STEPS } = options;
-  const [currentSteps, setCurrentSteps] = useState(0); //画面に表示する今の歩数
+  const { targetSteps = AppConfig.DEFAULT_TARGET_STEPS } = options;
+  const [todaySteps, setTodaySteps] = useState(0); //画面に表示する今の歩数
   const [isPedometerAvailable, setIsPedometerAvailable] = useState<boolean | null>(null); //スマホに歩数計センサーがついているかの判定結果
   const appState = useRef(AppState.currentState);
 
   // 進捗率を計算（0〜100%）
-  const progress = Math.min((currentSteps / goalSteps) * 100, 100);
+  const progress = Math.min((todaySteps / targetSteps) * 100, 100);
+
+  // 歩数データをStepData型で返す
+  const stepData: StepData = {
+    todaySteps,
+    targetSteps,
+  };
 
   // 今日の累計歩数を取得する関数
   const fetchTodaySteps = async () => {
@@ -29,7 +36,7 @@ export const useStepCounter = (options: UseStepCounterOptions = {}) => {
       try {
         const result = await Pedometer.getStepCountAsync(start, end); //OSからの返信がくるまで待機、今日の０時から今までの歩数の集計をする命令
         if (result) {
-          setCurrentSteps(result.steps); //画面の数字を書き直す
+          setTodaySteps(result.steps); //画面の数字を書き直す
         }
       } catch (error) {
         console.log('歩数取得エラー:', error);
@@ -69,7 +76,7 @@ export const useStepCounter = (options: UseStepCounterOptions = {}) => {
         try {
           const updated = await Pedometer.getStepCountAsync(start, new Date());
           if (updated) {
-            setCurrentSteps(updated.steps);
+            setTodaySteps(updated.steps);
           }
         } catch (error) {
           console.log('リアルタイム歩数取得エラー:', error);
@@ -95,5 +102,5 @@ export const useStepCounter = (options: UseStepCounterOptions = {}) => {
     };
   }, []);
 
-  return { currentSteps, isPedometerAvailable, progress, goalSteps }; //今の歩数とセンサー使えるか、進捗率を返す
+  return { stepData, progress, isPedometerAvailable }; //歩数データとセンサー使えるか、進捗率を返す
 };
