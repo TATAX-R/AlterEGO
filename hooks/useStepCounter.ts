@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 import { Pedometer } from 'expo-sensors';
+import { AppConfig } from '@/constants/AppConfig';
 
 type UseStepCounterOptions = {
   goalSteps?: number;
 };
 
 export const useStepCounter = (options: UseStepCounterOptions = {}) => {
-  const { goalSteps = 8000 } = options;
+  const { goalSteps = AppConfig.DEFAULT_GOAL_STEPS } = options;
   const [currentSteps, setCurrentSteps] = useState(0); //画面に表示する今の歩数
   const [isPedometerAvailable, setIsPedometerAvailable] = useState<boolean | null>(null); //スマホに歩数計センサーがついているかの判定結果
   const appState = useRef(AppState.currentState);

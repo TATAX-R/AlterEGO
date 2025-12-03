@@ -2,13 +2,16 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useStepCounter } from '@/hooks/useStepCounter';
+import { AppConfig } from '@/constants/AppConfig';
 
 // Props型定義
 type StepVisualizerProps = {
-  goalSteps?: number; // デフォルト: 8000
+  goalSteps?: number; // デフォルト: AppConfig.DEFAULT_GOAL_STEPS
 };
 
-export const StepVisualizer = ({ goalSteps = 8000 }: StepVisualizerProps) => {
+export const StepVisualizer = ({
+  goalSteps = AppConfig.DEFAULT_GOAL_STEPS,
+}: StepVisualizerProps) => {
   const { currentSteps, progress } = useStepCounter({ goalSteps });
 
   return (
