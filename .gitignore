@@ -49,8 +49,7 @@ app-example
 app/StepPage.tsx
 # ドキュメント（ローカル用）
 docs/
-guide.md
-SUBMIT_GUIDE.md
+
 
 # tamagui
 .tamagui/
