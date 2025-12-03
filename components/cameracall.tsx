@@ -15,36 +15,8 @@ import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 export default function CameraCallComponent() {
   const geminiprompt = `# Prompt
 あなたの仕事は送られてくる料理写真を分析して健康状態につながる要素を判定することです。
+そしてアプリパラメータへの影響を出力してください
 
-# 出力
-返答はjson形式になるように返してください。他の説明の文字等を含めるとエラーを起こしてしまうので一切無駄な文字を含めないようにしてください。
-求める形式は以下の通りです。
-
-export type FoodAnalysisResult = {
-  isFood: boolean; // 食べ物として認識されたか
-  foodName: string; // 料理名
-  impact: {
-    // 各パラメータへの増減値 (例: obesity: +5, diabetes: +2)
-    [key in DiseaseType]: number;
-  };
-  message?: string; // AIからのコメント
-};
-
-またこの時のDiseaseTypeは以下の通りです
-export type DiseaseType =
-  | 'obesity' // 肥満
-  | 'diabetes' // 糖尿病
-  | 'hypertension' // 高血圧
-  | 'dyslipidemia' // 脂質異常症
-  | 'gout'; // 痛風
-
-## 出力の際の注意点(形式)
-食べ物の名前は(～と思われます)等のあいまいな表現を避けてください。
-またmessageは最大50文字程度に収めてください。
-出力の際にバッククォートやjsonという文字列を挿入しないでください
-## 出力の際の注意点(数値)
-DiseaseTypeのパラメータは健康な食品の場合は負の値も適用してください
-DiseaseTypeの数値の範囲は-10から10にしてください。
 `;
 
   // 撮影した画像のURIを保存するステート

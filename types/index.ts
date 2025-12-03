@@ -1,3 +1,4 @@
+import { z } from 'zod';
 /**
  * 生活習慣病の種類
  * レーダーチャートやパラメータ管理のキーとして使用
@@ -82,3 +83,46 @@ export type StepData = {
   todaySteps: number; // 今日の歩数
   targetSteps: number; // 目標歩数 (ゲージの分母に使用)
 };
+
+/*
+  AIがjsonを出力するためのapi専用型定義
+*/
+// =========================================================
+// ★ ここから追記: AI連携用のZodスキーマ定義
+// 型定義とは別に「AIへの指示書」として用意します
+// =========================================================
+
+/**
+ * AI用: 病気IDのリスト
+ * ※注意: 上の DiseaseType と中身を合わせる必要があります
+ */
+export const diseaseTypeSchema = z.enum([
+  'obesity',
+  'diabetes',
+  'hypertension',
+  'dyslipidemia',
+  'gout',
+]);
+
+/**
+ * AI用: 解析結果の構造定義
+ * アプリ側の型 `FoodAnalysisResult` と互換性のある形で作ります
+ */
+export const foodAnalysisResultSchema = z.object({
+  isFood: z.boolean().describe('画像が食べ物かどうか。'),
+  foodName: z.string().describe('料理名。不明なら「不明」とする。'),
+
+  // Mapped Type ([key in DiseaseType]) は AIには伝わりにくいので、
+  // ここではあえて泥臭く全項目を列挙して、AIに意味を教えます。
+  impact: z
+    .object({
+      obesity: z.number().describe('肥満への影響度 (+/-)'),
+      diabetes: z.number().describe('血糖値への影響度 (+/-)'),
+      hypertension: z.number().describe('血圧への影響度 (+/-)'),
+      dyslipidemia: z.number().describe('脂質への影響度 (+/-)'),
+      gout: z.number().describe('尿酸値への影響度 (+/-)'),
+    })
+    .describe('各パラメータへの増減値'),
+
+  message: z.string().optional().describe('AIからのコメント'),
+});

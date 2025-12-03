@@ -1,4 +1,7 @@
+import { FoodAnalysisResult, foodAnalysisResultSchema } from './../types/index';
+import { zodToJsonSchema } from 'zod-to-json-schema';
 import { GoogleGenAI } from '@google/genai';
+import { foodAnalysisResultSchema, type FoodAnalysisResult } from '@/types';
 
 const GEMINI_API_KEY_KEY = process.env.EXPO_PUBLIC_GEMINI_API_KEY;
 
@@ -25,8 +28,13 @@ export async function POST(request: Request) {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: contents,
+      config: {
+        responseMimeType: 'application/json',
+        //ここで定義したスキーマを使う
+        responseJsonSchema: zodToJsonSchema(foodAnalysisResultSchema as any),
+      },
     });
-    console.log(response);
+
     if (!response) {
       console.log('responseが存在していません');
       return Response.json({ error: 'No response from AI' }, { status: 500 });
@@ -34,7 +42,15 @@ export async function POST(request: Request) {
     // パターンB: responseの中のresponseを見る
     // 旧SDKや一部の環境ではこちらが正解の場合があります
     const resultText = response.text;
-    return Response.json({ text: resultText });
+    if (!resultText) {
+      return Response.json({ text: 'resultTextが存在していませんエラーかなwwww' });
+    }
+    const jsonRaw = JSON.parse(resultText);
+
+    //ここでミスったらcatchにとばされますよ
+    const analysis: FoodAnalysisResult = foodAnalysisResultSchema.parse(jsonRaw);
+
+    return Response.json(analysis);
   } catch (error) {
     console.error('API error:', error);
     if (process.env.NODE_ENV === 'development') {
