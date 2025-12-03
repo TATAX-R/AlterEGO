@@ -136,10 +136,10 @@ DiseaseTypeの数値の範囲は-10から10にしてください。
         return result;
       } else {
         console.error('Base64データの生成に失敗しました');
-      }
+        return { text: 'エラー: Base64データの生成に失敗しました', error: true };
     } catch (e) {
       console.error('処理中にエラーが発生:', e);
-    }
+      return { text: `エラー: 処理中にエラーが発生しました (${e})`, error: true };
   };
   return (
     <View style={styles.container}>
