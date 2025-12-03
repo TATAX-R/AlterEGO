@@ -71,7 +71,7 @@ DiseaseTypeの数値の範囲は-10から10にしてください。
       quality: 1, // 画質 (0〜1)
     });
 
-    // . 撮影がキャンセルされなかった場合、画像を表示
+    // 3. 撮影がキャンセルされなかった場合、画像を表示
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
