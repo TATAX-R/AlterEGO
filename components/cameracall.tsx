@@ -118,6 +118,7 @@ DiseaseTypeの数値の範囲は-10から10にしてください。
       return result;
     } catch (error) {
       console.error('通信エラー', error);
+      return { error: '通信エラーが発生しました' };
     }
   };
 
