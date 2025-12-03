@@ -51,3 +51,6 @@ app/StepPage.tsx
 docs/
 guide.md
 SUBMIT_GUIDE.md
+
+# tamagui
+.tamagui/
