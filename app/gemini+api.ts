@@ -37,6 +37,12 @@ export async function POST(request: Request) {
     return Response.json({ text: resultText });
   } catch (error) {
     console.error('API error:', error);
-    return Response.json({ error: 'Server Error' }, { status: 500 });
-  }
+    if (process.env.NODE_ENV === 'development') {
+      return Response.json(
+        { error: error instanceof Error ? error.message : String(error), stack: error instanceof Error ? error.stack : undefined },
+        { status: 500 }
+      );
+    } else {
+      return Response.json({ error: 'Server Error' }, { status: 500 });
+    }
 }
