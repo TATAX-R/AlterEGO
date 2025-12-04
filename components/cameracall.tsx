@@ -18,6 +18,7 @@ export default function CameraCallComponent() {
 
 # 出力
 返答はjson形式になるように返してください。他の説明の文字等を含めるとエラーを起こしてしまうので一切無駄な文字を含めないようにしてください。
+またコードブロック形式では絶対に出力しないでください。
 求める形式は以下の通りです。
 
 export type FoodAnalysisResult = {
@@ -50,6 +51,9 @@ DiseaseTypeの数値の範囲は-10から10にしてください。
   // 撮影した画像のURIを保存するステート
   const [image, setImage] = useState<string | null>(null);
   const [apiReply, setApiReply] = useState('');
+  const [isTakenPicture, setIsTakenPicture] = useState(false);
+  const [isPressedSendButton, setIsPressedSendButton] = useState(false);
+  const [aiMessage, setAimessage] = useState('');
   /**
    * カメラを起動する関数
    * ボタンが押されたときに発火します
@@ -75,6 +79,7 @@ DiseaseTypeの数値の範囲は-10から10にしてください。
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
+    setIsTakenPicture(true);
   };
 
   const processImage = async (uri: string) => {
@@ -147,12 +152,13 @@ DiseaseTypeの数値の範囲は-10から10にしてください。
   return (
     <View style={styles.container}>
       {/* 画像がある場合は表示する */}
-      {image && (
+      {image && !isPressedSendButton && (
         <View>
           <Image source={{ uri: image }} style={styles.image} />
           <Button
             label="画像を送信する"
             onPress={async () => {
+              setIsPressedSendButton(true);
               console.log('送信テスト1:ボタンのpushを確認');
               //geminiAPI発火処理を書く
               const processedImage = await processImage(image);
@@ -166,15 +172,19 @@ DiseaseTypeの数値の範囲は-10から10にしてください。
                 console.error('apiから入ってきた返答でtextオブジェクトが存在していません。');
               }
               setApiReply(JSON.stringify(apihento));
+              const aimessageconst = apihento.message;
+              setAimessage(aimessageconst);
+
+              console.log('Aimessageに', { aimessageconst }, 'を代入しました');
             }}
             theme="primary"
           />
-          <Text> {apiReply}</Text>
+          <Text style={styles.text}>{aiMessage}</Text>
         </View>
       )}
 
       {/* このボタンを押すと takePhoto 関数が発火 */}
-      <Button label="カメラを起動する" onPress={takePhoto} theme="primary" />
+      {!isTakenPicture && <Button label="カメラを起動する" onPress={takePhoto} theme="primary" />}
     </View>
   );
 }
@@ -193,7 +203,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   text: {
-    color: '#fff',
+    color: '#000',
     margin: 5,
   },
 });
