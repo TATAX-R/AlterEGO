@@ -162,7 +162,8 @@ DiseaseTypeの数値の範囲は-10から10にしてください。
               const apihento = await handleImageProcessing(image);
               console.log(apihento);
               if (apihento?.text) {
-                setApiReply(apihento.text);
+                setApiReply(JSON.stringify(apihento));
+                console.error('apiから入ってきた返答でtextオブジェクトが存在していません。');
               }
             }}
             theme="primary"

@@ -32,11 +32,29 @@ export async function POST(request: Request) {
       return Response.json({ error: 'No response from AI' }, { status: 500 });
     }
     // パターンB: responseの中のresponseを見る
-    // 旧SDKや一部の環境ではこちらが正解の場合があります
     const resultText = response.text;
-    return Response.json({ text: resultText });
+
+    if (!resultText) {
+      return Response.json({ text: 'resultTextが存在していませんエラーかなwwww' });
+    }
+    console.log('🔥 AI Raw Response:', resultText); // ← これを追加！！！
+    const jsonRaw = JSON.parse(resultText);
+
+    //ここでミスったらcatchにとばされますよ
+    console.log(jsonRaw);
+    return Response.json(jsonRaw);
   } catch (error) {
     console.error('API error:', error);
-    return Response.json({ error: 'Server Error' }, { status: 500 });
+    if (process.env.NODE_ENV === 'development') {
+      return Response.json(
+        {
+          error: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined,
+        },
+        { status: 500 }
+      );
+    } else {
+      return Response.json({ error: 'ざんねんでしたエラーwwwwwwwwwwwww' }, { status: 500 });
+    }
   }
 }
