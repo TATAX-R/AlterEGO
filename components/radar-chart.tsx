@@ -1,17 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { Text, TouchableOpacity, View, StyleSheet, Animated, Easing } from 'react-native';
 import Svg, { Polygon, Line } from 'react-native-svg';
+import { useFocusEffect } from 'expo-router';
 
 import { DiseaseType, HealthStats } from '@/types/index';
-import { diseaseData } from '@/constants/diseases';
+import { diseaseData, DISEASE_KEYS } from '@/constants/diseases';
 
-// ラベルキー配列
-const labelKeys: DiseaseType[] = ['obesity', 'diabetes', 'hypertension', 'dyslipidemia', 'gout'];
-
-// disease.tsから表示ラベルを取得
-const displayLabels: string[] = labelKeys.map((key) => diseaseData[key].name);
-
-// カスタムレーダーチャートコンポーネント
 interface CustomRadarChartProps {
   data: number[];
   labels: string[];
@@ -33,31 +27,30 @@ function CustomRadarChart({
   const radius = size / 2 - 40;
   const angleStep = (2 * Math.PI) / labels.length;
 
-  // アニメーション用
   const animatedValue = useRef(new Animated.Value(0)).current;
   const [animProgress, setAnimProgress] = useState(0);
 
-  useEffect(() => {
-    // アニメーションをリッスン
-    const listenerId = animatedValue.addListener(({ value }) => {
-      setAnimProgress(value);
-    });
+  useFocusEffect(
+    useCallback(() => {
+      animatedValue.setValue(0);
 
-    // 登場アニメーション
-    Animated.timing(animatedValue, {
-      toValue: 1,
-      duration: 650,
-      easing: Easing.out(Easing.back(1.2)),
-      useNativeDriver: false,
-    }).start();
+      const listenerId = animatedValue.addListener(({ value }) => {
+        setAnimProgress(value);
+      });
 
-    return () => {
-      animatedValue.removeListener(listenerId);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+      Animated.timing(animatedValue, {
+        toValue: 1,
+        duration: 650,
+        easing: Easing.out(Easing.back(1.2)),
+        useNativeDriver: false,
+      }).start();
 
-  // 座標を計算
+      return () => {
+        animatedValue.removeListener(listenerId);
+      };
+    }, [animatedValue])
+  );
+
   const getPoint = (value: number, index: number) => {
     const angle = angleStep * index - Math.PI / 2;
     const r = (value / maxValue) * radius;
@@ -67,7 +60,6 @@ function CustomRadarChart({
     };
   };
 
-  // ラベルの位置を計算
   const getLabelPosition = (index: number) => {
     const angle = angleStep * index - Math.PI / 2;
     const r = radius + 25;
@@ -77,14 +69,11 @@ function CustomRadarChart({
     };
   };
 
-  // データポイントを生成（アニメーション適用）
   const dataPoints = data.map((value, index) => getPoint(value * animProgress, index));
   const polygonPoints = dataPoints.map((p) => `${p.x},${p.y}`).join(' ');
 
-  // グリッドの五角形を生成
   const gridLevels = [1, 0.75, 0.5, 0.25];
 
-  // 五角形のポイントを生成
   const getPolygonPoints = (level: number) => {
     return labels
       .map((_, index) => {
@@ -99,34 +88,15 @@ function CustomRadarChart({
     <View style={{ alignItems: 'center' }}>
       <Svg width={size} height={size}>
         {/* グリッドの五角形 */}
-        {gridLevels.map((level, i) =>
-          level === 1 ? (
-            <Polygon
-              key={i}
-              points={getPolygonPoints(level)}
-              stroke="#919191ff"
-              strokeWidth={1}
-              fill="#fcc7c7ff"
-            />
-          ) : level === 0.75 ? (
-            <Polygon
-              key={i}
-              points={getPolygonPoints(level)}
-              stroke="#e1e1e1ff"
-              strokeWidth={1}
-              fill="#ffffffff"
-            />
-          ) : (
-            <Polygon
-              key={i}
-              points={getPolygonPoints(level)}
-              stroke="#e1e1e1ff"
-              strokeWidth={1}
-              fill="#ffffffff"
-            />
-          )
-        )}
-
+        {gridLevels.map((level, i) => (
+          <Polygon
+            key={i}
+            points={getPolygonPoints(level)}
+            stroke={level === 1 ? '#919191ff' : '#e1e1e1ff'}
+            strokeWidth={1}
+            fill={level === 1 ? '#fcc7c7ff' : '#ffffffff'}
+          />
+        ))}
         {/* 軸の線 */}
         {labels.map((_, index) => {
           const point = getPoint(maxValue, index);
@@ -143,11 +113,9 @@ function CustomRadarChart({
           );
         })}
 
-        {/* データのポリゴン */}
         <Polygon points={polygonPoints} fill="#00a2ff52" stroke="#0097eeff" strokeWidth={2.5} />
       </Svg>
 
-      {/* クリック可能なラベル */}
       {labels.map((label, index) => {
         const pos = getLabelPosition(index);
         return (
@@ -161,9 +129,7 @@ function CustomRadarChart({
                 top: pos.y - 12,
               },
             ]}
-            onPress={() => {
-              console.log('Label pressed:', labelKeys[index]);
-            }}>
+            onPress={() => onLabelPress?.(labelKeys[index], index)}>
             <Text style={styles.labelText}>{label}</Text>
           </TouchableOpacity>
         );
@@ -177,20 +143,21 @@ interface RadarChartViewProps {
 }
 
 export default function RadarChartView({ stats }: RadarChartViewProps) {
-  // HealthStatsからデータを取得
-  const data = labelKeys.map((key) => stats[key]);
+  const data = DISEASE_KEYS.map((key) => stats[key]);
+  const displayLabels = DISEASE_KEYS.map((key) => diseaseData[key].name);
 
   return (
     <View style={styles.container}>
       <CustomRadarChart
         data={data}
         labels={displayLabels}
-        labelKeys={labelKeys}
+        labelKeys={DISEASE_KEYS}
         maxValue={100}
         onLabelPress={(key) => {
-          // 選択された病気の情報をコンソールに出力
           const diseaseInfo = diseaseData[key];
-          console.log('Selected disease:', key, diseaseInfo);
+          console.log('ID:', diseaseInfo.id);
+          console.log('名前:', diseaseInfo.name);
+          console.log('Tips:', diseaseInfo.tips);
         }}
       />
     </View>
