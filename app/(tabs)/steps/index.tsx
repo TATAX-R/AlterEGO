@@ -1,15 +1,23 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { StepVisualizer } from '@/components/StepCounter';
+import { StepMessage, StepProgressBar, StepCount } from '@/components/StepCounter';
+import { useStepCounter } from '@/hooks/useStepCounter';
 
 export default function StepsScreen() {
+  const { stepData, progress } = useStepCounter();
+  const isGoalReached = stepData.todaySteps >= stepData.targetSteps;
+
   return (
     <View style={styles.page}>
-      <StepVisualizer />
+      <StepMessage isGoalReached={isGoalReached} />
+      <StepProgressBar progress={progress} />
+      <View style={styles.spacer} />
+      <StepCount stepData={stepData} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: '#fff', justifyContent: 'center' },
+  page: { flex: 1, backgroundColor: '#fff', alignItems: 'center', padding: 20 },
+  spacer: { flex: 1 },
 });
