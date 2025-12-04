@@ -1,9 +1,23 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { StepMessage, StepProgressBar, StepCount } from '@/components/StepCounter';
+import { View, StyleSheet, Platform } from 'react-native';
+import {
+  StepMessage,
+  StepProgressBar,
+  StepCount,
+  StepUnavailableNotice,
+} from '@/components/StepCounter';
 import { useStepCounter } from '@/hooks/useStepCounter';
 
 export default function StepsScreen() {
+  // AndroidのExpo Goでは歩数計が利用できない
+  if (Platform.OS === 'android') {
+    return (
+      <View style={styles.page}>
+        <StepUnavailableNotice />
+      </View>
+    );
+  }
+
   const { stepData, progress } = useStepCounter();
   const isGoalReached = stepData.todaySteps >= stepData.targetSteps;
 
