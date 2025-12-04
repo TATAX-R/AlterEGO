@@ -30,8 +30,13 @@ export const useStepCounter = (options: UseStepCounterOptions = {}) => {
 
     if (isAvailable) {
       const end = new Date(); //今の時間
-      const start = new Date(); //今日の始まり
-      start.setHours(0, 0, 0, 0); //時間を[00:00:00]に戻す
+      // 日本時間（UTC+9）の今日の0時を取得
+      const start = new Date();
+      const japanOffset = 9 * 60; // 日本はUTC+9（分単位）
+      const localOffset = start.getTimezoneOffset(); // ローカルのUTCオフセット（分単位、日本なら-540）
+      const diffMinutes = japanOffset + localOffset; // 日本時間との差分
+      start.setHours(0, 0, 0, 0); //ローカルの0時
+      start.setMinutes(start.getMinutes() - diffMinutes); //日本時間の0時に調整
 
       try {
         const result = await Pedometer.getStepCountAsync(start, end); //OSからの返信がくるまで待機、今日の０時から今までの歩数の集計をする命令
@@ -67,9 +72,13 @@ export const useStepCounter = (options: UseStepCounterOptions = {}) => {
       // アプリを開いた瞬間、今日の「累計歩数」を取りに行く
       await fetchTodaySteps();
 
-      // リアルタイムで歩数を監視
+      // リアルタイムで歩数を監視（日本時間の0時基準）
       const start = new Date();
+      const japanOffset = 9 * 60;
+      const localOffset = start.getTimezoneOffset();
+      const diffMinutes = japanOffset + localOffset;
       start.setHours(0, 0, 0, 0);
+      start.setMinutes(start.getMinutes() - diffMinutes);
 
       subscription = Pedometer.watchStepCount(async () => {
         // 歩くたびに「今日のトータル」を再取得（確実な方法）
