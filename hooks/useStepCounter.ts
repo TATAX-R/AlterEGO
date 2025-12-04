@@ -100,7 +100,7 @@ export const useStepCounter = (options: UseStepCounterOptions = {}) => {
       subscription && subscription.remove();
       appStateSubscription.remove();
     };
-  }, []);
+  }, [targetSteps]);
 
   return { stepData, progress, isPedometerAvailable }; //歩数データとセンサー使えるか、進捗率を返す
 };
