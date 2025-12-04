@@ -165,6 +165,7 @@ DiseaseTypeの数値の範囲は-10から10にしてください。
                 setApiReply(JSON.stringify(apihento));
                 console.error('apiから入ってきた返答でtextオブジェクトが存在していません。');
               }
+              setApiReply(JSON.stringify(apihento));
             }}
             theme="primary"
           />
