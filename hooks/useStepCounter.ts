@@ -71,7 +71,12 @@ export const useStepCounter = (options: UseStepCounterOptions = {}) => {
       const start = new Date();
       start.setHours(0, 0, 0, 0);
 
+      let isUpdating = false;
+
       subscription = Pedometer.watchStepCount(async () => {
+        if (isUpdating) return;
+        isUpdating = true;
+
         // 歩くたびに「今日のトータル」を再取得（確実な方法）
         try {
           const updated = await Pedometer.getStepCountAsync(start, new Date());
@@ -80,6 +85,8 @@ export const useStepCounter = (options: UseStepCounterOptions = {}) => {
           }
         } catch (error) {
           console.log('リアルタイム歩数取得エラー:', error);
+        } finally {
+          isUpdating = false;
         }
       });
     };
