@@ -13,6 +13,7 @@ export const useStepCounter = (options: UseStepCounterOptions = {}) => {
   const [todaySteps, setTodaySteps] = useState(0); //画面に表示する今の歩数
   const [isPedometerAvailable, setIsPedometerAvailable] = useState<boolean | null>(null); //スマホに歩数計センサーがついているかの判定結果
   const appState = useRef(AppState.currentState);
+  const isUpdatingRef = useRef(false); // 歩数更新中かどうかのフラグ（レースコンディション防止）
 
   // 進捗率を計算（0〜100%）
   const progress = Math.min((todaySteps / targetSteps) * 100, 100);
@@ -71,11 +72,9 @@ export const useStepCounter = (options: UseStepCounterOptions = {}) => {
       const start = new Date();
       start.setHours(0, 0, 0, 0);
 
-      let isUpdating = false;
-
       subscription = Pedometer.watchStepCount(async () => {
-        if (isUpdating) return;
-        isUpdating = true;
+        if (isUpdatingRef.current) return;
+        isUpdatingRef.current = true;
 
         // 歩くたびに「今日のトータル」を再取得（確実な方法）
         try {
@@ -86,7 +85,7 @@ export const useStepCounter = (options: UseStepCounterOptions = {}) => {
         } catch (error) {
           console.log('リアルタイム歩数取得エラー:', error);
         } finally {
-          isUpdating = false;
+          isUpdatingRef.current = false;
         }
       });
     };
