@@ -11,7 +11,7 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSMotionUsageDescription": "歩数を計測してペットの成長に反映するために使用します"
+        "NSMotionUsageDescription": "歩数を計測してペットの健康に反映するために使用します"
       }
     },
     "android": {
