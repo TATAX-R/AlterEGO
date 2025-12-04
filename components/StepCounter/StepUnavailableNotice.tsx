@@ -7,7 +7,7 @@ export const StepUnavailableNotice = () => {
     <View style={styles.container}>
       <Text style={styles.icon}>🚫</Text>
       <Text style={styles.title}>ご利用いただけません</Text>
-      <Text style={styles.message}>Androidユーザの方はExpo Goでこの機能はご利用いただけません</Text>
+      <Text style={styles.message}>Androidユーザーの方はExpo Goでこの機能はご利用いただけません</Text>
       <Text style={styles.subMessage}>展示中のiOSアプリでお試しください</Text>
     </View>
   );
