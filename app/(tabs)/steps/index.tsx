@@ -9,6 +9,8 @@ import {
 import { useStepCounter } from '@/hooks/useStepCounter';
 
 export default function StepsScreen() {
+  const { stepData, progress } = useStepCounter();
+  
   // AndroidのExpo Goでは歩数計が利用できない
   if (Platform.OS === 'android') {
     return (
@@ -18,7 +20,6 @@ export default function StepsScreen() {
     );
   }
 
-  const { stepData, progress } = useStepCounter();
   const isGoalReached = stepData.todaySteps >= stepData.targetSteps;
 
   return (
