@@ -37,7 +37,6 @@ export const PetNameEditModal = ({ visible, currentName, onClose, onSave }: Prop
   const handleTextChange = (text: string) => {
     // Clear empty warning when user types
     setShowEmptyWarning(false);
-    
     if (text.length > MAX_NAME_LENGTH) {
       setShowWarning(true);
       setName(text.slice(0, MAX_NAME_LENGTH)); // 10文字に切り詰め
