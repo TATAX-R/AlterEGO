@@ -43,7 +43,12 @@ export const PetNameEditModal = ({ visible, currentName, onClose, onSave }: Prop
   };
 
   const handleSave = () => {
-    onSave(name);
+    // 名前が空または空白のみの場合は保存しない
+    const trimmedName = name.trim();
+    if (!trimmedName) {
+      return;
+    }
+    onSave(trimmedName);
     onClose();
   };
 
