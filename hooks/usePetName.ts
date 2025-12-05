@@ -8,7 +8,6 @@ const STORAGE_KEY = 'pet_name_data'; // 保存キー
 export const usePetName = () => {
   // 初期値（プレースホルダー）
   const [petName, setPetName] = useState('タタックス');
-  const [isLoading, setIsLoading] = useState(true);
 
   // 1. 初回起動時に保存された名前を読み込む
   useEffect(() => {
@@ -20,8 +19,6 @@ export const usePetName = () => {
         }
       } catch (e) {
         console.error('Failed to load pet name:', e);
-      } finally {
-        setIsLoading(false);
       }
     };
     loadPetName();
@@ -47,7 +44,6 @@ export const usePetName = () => {
 
   return {
     petName,
-    isLoading,
     updatePetName,
   };
 };
