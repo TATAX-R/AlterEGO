@@ -63,9 +63,7 @@ export const PetNameEditModal = ({ visible, currentName, onClose, onSave }: Prop
             autoFocus
           />
 
-          {showWarning && (
-            <Text style={styles.warningText}>8文字以内で入力してください</Text>
-          )}
+          {showWarning && <Text style={styles.warningText}>8文字以内で入力してください</Text>}
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={[styles.button, styles.buttonCancel]} onPress={onClose}>
