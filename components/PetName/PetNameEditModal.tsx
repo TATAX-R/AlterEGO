@@ -23,16 +23,21 @@ const MAX_NAME_LENGTH = 10;
 export const PetNameEditModal = ({ visible, currentName, onClose, onSave }: Props) => {
   const [name, setName] = useState(currentName);
   const [showWarning, setShowWarning] = useState(false);
+  const [showEmptyWarning, setShowEmptyWarning] = useState(false);
 
   // モーダルが開くたびに、今の名前をセット
   useEffect(() => {
     if (visible) {
       setName(currentName);
       setShowWarning(false);
+      setShowEmptyWarning(false);
     }
   }, [visible, currentName]);
 
   const handleTextChange = (text: string) => {
+    // Clear empty warning when user types
+    setShowEmptyWarning(false);
+    
     if (text.length > MAX_NAME_LENGTH) {
       setShowWarning(true);
       setName(text.slice(0, MAX_NAME_LENGTH)); // 10文字に切り詰め
@@ -43,7 +48,12 @@ export const PetNameEditModal = ({ visible, currentName, onClose, onSave }: Prop
   };
 
   const handleSave = () => {
-    onSave(name);
+    const trimmedName = name.trim();
+    if (trimmedName.length === 0) {
+      setShowEmptyWarning(true);
+      return;
+    }
+    onSave(trimmedName);
     onClose();
   };
 
@@ -64,6 +74,7 @@ export const PetNameEditModal = ({ visible, currentName, onClose, onSave }: Prop
           />
 
           {showWarning && <Text style={styles.warningText}>10文字以内で入力してください</Text>}
+          {showEmptyWarning && <Text style={styles.warningText}>名前を入力してください</Text>}
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={[styles.button, styles.buttonCancel]} onPress={onClose}>
