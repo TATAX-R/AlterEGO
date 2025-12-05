@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F9FA',
     padding: 12,
     borderRadius: 12,
-    alignSelf: 'flex-start',
+    width: 200,
   },
   label: {
     fontSize: 10,
