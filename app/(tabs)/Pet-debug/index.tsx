@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F9FA',
     padding: 12,
     borderRadius: 12,
-    width: 200,
+    alignSelf: 'flex-start',
     alignItems: 'center',
   },
   labelRow: {
