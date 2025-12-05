@@ -1,4 +1,4 @@
-// app/(tabs)/index.tsx
+// app/(tabs)/PetName-debug/index.tsx
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
