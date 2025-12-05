@@ -18,7 +18,7 @@ type Props = {
   onSave: (newName: string) => void;
 };
 
-const MAX_NAME_LENGTH = 8;
+const MAX_NAME_LENGTH = 10;
 
 export const PetNameEditModal = ({ visible, currentName, onClose, onSave }: Props) => {
   const [name, setName] = useState(currentName);
@@ -35,7 +35,7 @@ export const PetNameEditModal = ({ visible, currentName, onClose, onSave }: Prop
   const handleTextChange = (text: string) => {
     if (text.length > MAX_NAME_LENGTH) {
       setShowWarning(true);
-      setName(text.slice(0, MAX_NAME_LENGTH)); // 8文字に切り詰め
+      setName(text.slice(0, MAX_NAME_LENGTH)); // 10文字に切り詰め
     } else {
       setShowWarning(false);
       setName(text);
@@ -63,7 +63,7 @@ export const PetNameEditModal = ({ visible, currentName, onClose, onSave }: Prop
             autoFocus
           />
 
-          {showWarning && <Text style={styles.warningText}>8文字以内で入力してください</Text>}
+          {showWarning && <Text style={styles.warningText}>10文字以内で入力してください</Text>}
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={[styles.button, styles.buttonCancel]} onPress={onClose}>

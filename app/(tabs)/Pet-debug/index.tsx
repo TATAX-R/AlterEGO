@@ -36,12 +36,11 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#fff', paddingTop: 60 },
+  container: { flex: 1, padding: 20, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' },
   petHeader: {
     backgroundColor: '#F8F9FA',
     padding: 12,
     borderRadius: 12,
-    alignSelf: 'flex-start',
     alignItems: 'center',
   },
   labelRow: {
