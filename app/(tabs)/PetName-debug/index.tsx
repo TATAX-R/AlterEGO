@@ -5,7 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 // ファイル名変更に合わせてimportを修正
 import { usePetName } from '@/hooks/usePetName';
-import { PetNameEditModal } from '@/components/Pet/PetNameEditModal';
+import { PetNameEditModal } from '@/components/PetName/PetNameEditModal';
 
 export default function HomeScreen() {
   const { petName, updatePetName } = usePetName();
@@ -36,7 +36,13 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' },
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   petHeader: {
     backgroundColor: '#F8F9FA',
     padding: 12,
