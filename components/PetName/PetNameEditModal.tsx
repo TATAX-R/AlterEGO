@@ -1,4 +1,4 @@
-// components/Pet/PetNameEditModal.tsx
+// components/PetName/PetNameEditModal.tsx
 import React, { useState, useEffect } from 'react';
 import {
   Modal,
