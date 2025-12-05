@@ -18,15 +18,29 @@ type Props = {
   onSave: (newName: string) => void;
 };
 
+const MAX_NAME_LENGTH = 8;
+
 export const PetNameEditModal = ({ visible, currentName, onClose, onSave }: Props) => {
   const [name, setName] = useState(currentName);
+  const [showWarning, setShowWarning] = useState(false);
 
   // モーダルが開くたびに、今の名前をセット
   useEffect(() => {
     if (visible) {
       setName(currentName);
+      setShowWarning(false);
     }
   }, [visible, currentName]);
+
+  const handleTextChange = (text: string) => {
+    if (text.length > MAX_NAME_LENGTH) {
+      setShowWarning(true);
+      setName(text.slice(0, MAX_NAME_LENGTH)); // 8文字に切り詰め
+    } else {
+      setShowWarning(false);
+      setName(text);
+    }
+  };
 
   const handleSave = () => {
     onSave(name);
@@ -44,11 +58,14 @@ export const PetNameEditModal = ({ visible, currentName, onClose, onSave }: Prop
           <TextInput
             style={styles.input}
             value={name}
-            onChangeText={setName}
+            onChangeText={handleTextChange}
             placeholder="新しい名前を入力"
-            maxLength={8}
             autoFocus
           />
+
+          {showWarning && (
+            <Text style={styles.warningText}>8文字以内で入力してください</Text>
+          )}
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={[styles.button, styles.buttonCancel]} onPress={onClose}>
@@ -95,8 +112,13 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ddd',
     fontSize: 18,
     padding: 10,
-    marginBottom: 30,
+    marginBottom: 10,
     textAlign: 'center',
+  },
+  warningText: {
+    color: '#e74c3c',
+    fontSize: 12,
+    marginBottom: 20,
   },
   buttonContainer: {
     flexDirection: 'row',

@@ -15,20 +15,13 @@ export default function HomeScreen() {
     <View style={styles.container}>
       {/* ペット表示エリア */}
       <View style={styles.petHeader}>
-        <View>
+        <View style={styles.labelRow}>
           <Text style={styles.label}>Your Pet Name</Text>
-          <View style={styles.nameRow}>
-            {/* ここに名前を表示 */}
-            <Text style={styles.petNameText}>{petName}</Text>
-
-            {/* 編集ボタン */}
-            <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.editButton}>
-              <MaterialIcons name="edit" size={20} color="#007AFF" />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.editButton}>
+            <MaterialIcons name="edit" size={12} color="#888" />
+          </TouchableOpacity>
         </View>
-
-        <View style={styles.avatarPlaceholder} />
+        <Text style={styles.petNameText}>{petName}</Text>
       </View>
 
       {/* 名前編集モーダル */}
@@ -45,12 +38,16 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: '#fff', paddingTop: 60 },
   petHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
     backgroundColor: '#F8F9FA',
     padding: 12,
     borderRadius: 12,
     width: 200,
+    alignItems: 'center',
+  },
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   label: {
     fontSize: 10,
@@ -59,7 +56,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textTransform: 'uppercase',
   },
-  nameRow: { flexDirection: 'row', alignItems: 'center' },
-  petNameText: { fontSize: 20, fontWeight: 'bold', color: '#333', marginRight: 8 },
-  editButton: { padding: 8 },
+  petNameText: { fontSize: 20, fontWeight: 'bold', color: '#333', textAlign: 'center' },
+  editButton: {
+    padding: 2,
+  },
 });
