@@ -46,6 +46,7 @@ export const PetNameEditModal = ({ visible, currentName, onClose, onSave }: Prop
             value={name}
             onChangeText={setName}
             placeholder="新しい名前を入力"
+            maxLength={8}
             autoFocus
           />
 
