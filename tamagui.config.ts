@@ -1,92 +1,10 @@
 import { createTamagui } from 'tamagui';
-import { createInterFont } from '@tamagui/font-inter';
-import { shorthands } from '@tamagui/shorthands';
-import { themes, tokens } from '@tamagui/themes';
-import { createAnimations } from '@tamagui/animations-react-native';
-
-const animations = createAnimations({
-  bouncy: {
-    type: 'spring',
-    damping: 10,
-    mass: 0.9,
-    stiffness: 100,
-  },
-  lazy: {
-    type: 'spring',
-    damping: 20,
-    stiffness: 60,
-  },
-  quick: {
-    type: 'spring',
-    damping: 20,
-    mass: 1.2,
-    stiffness: 250,
-  },
-});
-
-const headingFont = createInterFont({
-  size: {
-    6: 15,
-  },
-  transform: {
-    6: 'uppercase',
-    7: 'none',
-  },
-  weight: {
-    6: '400',
-    7: '700',
-  },
-  color: {
-    6: '$colorFocus',
-    7: '$color',
-  },
-  letterSpacing: {
-    5: 2,
-    6: 1,
-    7: 0,
-    8: -1,
-  },
-  face: {
-    700: { normal: 'InterBold' },
-  },
-});
-
-const bodyFont = createInterFont(
-  {
-    face: {
-      700: { normal: 'InterBold' },
-    },
-  },
-  {
-    sizeSize: (size) => Math.round(size * 1.1),
-    sizeLineHeight: (size) => Math.round(size * 1.1 + 10),
-  }
-);
+import { config as defaultConfig } from '@tamagui/config/v3';
+import { themes as customThemes } from './themes';
 
 const appConfig = createTamagui({
-  animations,
-  defaultTheme: 'light',
-  shouldAddPrefersColorThemes: false,
-  themeClassNameOnRoot: false,
-  shorthands,
-  fonts: {
-    heading: headingFont,
-    body: bodyFont,
-  },
-  themes,
-  tokens,
-  media: {
-    xs: { maxWidth: 660 },
-    sm: { maxWidth: 800 },
-    md: { maxWidth: 1020 },
-    lg: { maxWidth: 1280 },
-    xl: { maxWidth: 1420 },
-    xxl: { maxWidth: 1600 },
-    gtXs: { minWidth: 660 + 1 },
-    gtSm: { minWidth: 800 + 1 },
-    gtMd: { minWidth: 1020 + 1 },
-    gtLg: { minWidth: 1280 + 1 },
-  },
+  ...defaultConfig,
+  themes: customThemes,
 });
 
 export type AppConfig = typeof appConfig;

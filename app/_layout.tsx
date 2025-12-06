@@ -1,5 +1,5 @@
 import { useColorScheme } from 'react-native';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -20,8 +20,8 @@ export default function RootLayout() {
   }
 
   return (
-    <TamaguiProvider config={config} defaultTheme={colorScheme ?? 'light'}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <TamaguiProvider config={config} defaultTheme="light">
+      <ThemeProvider value={DefaultTheme}>
         <Stack>
           <Stack.Screen name="index" options={{ title: 'Home' }} />
           {<Stack.Screen name="(tabs)" options={{ headerShown: false }} />}
