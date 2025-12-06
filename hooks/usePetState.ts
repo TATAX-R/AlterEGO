@@ -18,7 +18,7 @@ const STORAGE_KEY = 'pet_state_data';
 const HAPPY_THRESHOLD = 30; // この値未満ならhappy
 
 // 危険度レベル判定の閾値
-const DANGER_THRESHOLD = 95; // この値以上でdanger（死亡判定ラインに近い）
+const DANGER_THRESHOLD = 90; // この値以上でdanger（死亡判定ラインに近い）
 
 // AsyncStorage保存用の型（Date → string）
 type SerializedPetState = Omit<PetState, 'birthDate' | 'lastFedDate'> & {
