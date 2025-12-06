@@ -1,23 +1,8 @@
 import React from 'react';
 import { useWindowDimensions } from 'react-native';
-import { YStack, useTheme, Text, Circle } from 'tamagui';
+import { YStack, useTheme } from 'tamagui';
 import Svg, { Path } from 'react-native-svg';
-
-/**
- * キャラクターのプレースホルダー
- * 実際の実装時はここをSVGコンポーネントなどに置き換えてください
- */
-const CharacterPlaceholder = () => {
-  return (
-    <YStack alignItems="center" justifyContent="center" gap="$2">
-      {/* キャラクターの仮の姿 */}
-      <Circle size={100} backgroundColor="$red10" elevation="$4" />
-      <Text color="white" fontSize="$3" fontWeight="bold">
-        Character
-      </Text>
-    </YStack>
-  );
-};
+import LottieView from 'lottie-react-native';
 
 /**
  * 曲線の地面を描画するコンポーネント
@@ -29,10 +14,6 @@ const CurveGround = ({ color, height }: { color: string; height: number }) => {
 
   // ベジェ曲線の定義
   // M=Move to, Q=Quadratic Bezier (制御点x y, 終点x y), L=Line to, Z=Close path
-  // 画面左端(0, 50)からスタートし、
-  // 中央上部(width/2, 0)を制御点として、
-  // 右端(width, 50)へカーブを描き、
-  // その後下部を埋めるパスです。
   const pathData = `
     M 0 ${height * 0.3}
     Q ${width / 2} 0 ${width} ${height * 0.3}
@@ -51,9 +32,7 @@ const CurveGround = ({ color, height }: { color: string; height: number }) => {
 export default function WorldScreen() {
   const theme = useTheme();
 
-  // Theme Builderの定義に従って色を取得
-  // .get() を使うことで、CSS変数やRawのカラーコード文字列を取り出せます(SVGで使うため)
-  const skyColor = theme.color5.get();
+  // 地面の色はテーマから取得
   const groundColor = theme.background.get();
 
   // 地面エリアの高さ設定
@@ -62,16 +41,29 @@ export default function WorldScreen() {
   return (
     <YStack
       flex={1}
-      backgroundColor={skyColor} // 全体の背景＝空
-      justifyContent="flex-end" // コンテンツを下に寄せる
-      alignItems="center" // 水平方向中央揃え
+      backgroundColor="#45E6E6" // 指定された空の色（青に近い緑）
       position="relative">
-      {/* キャラクター
-        地面の曲線の上に立つようにマージンで調整
-        (地面の高さ - 曲線の頂点までのオフセット分だけ上げるイメージ)
+      {/* キャラクター (Lottie)
+        width/height 100% を維持しつつ、位置を下げるためにコンテナでラップしています。
+        y={150} の値を増減させることで、地面との接地感を調整してください。
+        zIndex={1} で地面より手前に表示していますが、足元を草むらに隠したい場合は0にしてください。
       */}
-      <YStack marginBottom={GROUND_HEIGHT * 0.2} zIndex={1}>
-        <CharacterPlaceholder />
+      <YStack
+        position="absolute"
+        width="100%"
+        height="100%"
+        zIndex={1}
+        y={150} // ★ここを調整してキャラクターの高さを決めてください
+        pointerEvents="none" // キャラクターがタッチ操作を邪魔しないように設定
+      >
+        <LottieView
+          source={require('@/assets/lottie/pig-idle.json')}
+          style={{ width: '100%', height: '100%' }}
+          autoPlay
+          loop
+          // 必要に応じて resizeMode="contain" や "cover" を明示してください
+          resizeMode="contain"
+        />
       </YStack>
 
       {/* 地面 (絶対配置で最下部に固定) */}
