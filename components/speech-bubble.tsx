@@ -3,18 +3,18 @@ import { YStack, Text, useTheme } from 'tamagui';
 import { Symptom } from '@/types';
 
 type Props = {
-  Symptom: Symptom;
+  symptom: Symptom;
 };
 
 // 統一された色設定
 const BUBBLE_BACKGROUND = '$color5'; // 優しいクリーム色
 
-export const SpeechBubble: React.FC<Props> = ({ Symptom }) => {
+export const SpeechBubble: React.FC<Props> = ({ symptom }) => {
   const theme = useTheme();
   const backgroundColor = theme.background.val;
 
   const handlePress = () => {
-    console.log(Symptom.tipsTitle, Symptom.tipsContent);
+    console.log(symptom.tipsTitle, symptom.tipsContent);
   };
 
   return (
@@ -44,7 +44,7 @@ export const SpeechBubble: React.FC<Props> = ({ Symptom }) => {
         alignItems="center"
         justifyContent="center">
         <Text fontSize="$9" fontWeight="bold" color="#473C33">
-          {Symptom.text}
+          {symptom.text}
         </Text>
       </YStack>
 
