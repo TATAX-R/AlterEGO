@@ -73,6 +73,7 @@ export const usePetState = () => {
         }
       } catch (e) {
         console.error('Failed to load pet state:', e);
+        Alert.alert('データの読み込みに失敗しました', '初期状態から開始します。');
       } finally {
         setIsLoading(false);
       }
