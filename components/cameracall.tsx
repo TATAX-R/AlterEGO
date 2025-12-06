@@ -1,8 +1,4 @@
-import { useState } from 'react';
 import { Image, StyleSheet, View, Alert, Text } from 'react-native';
-import Button from '@/components/button';
-import * as ImagePicker from 'expo-image-picker';
-import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 
 {
   /*

@@ -19,11 +19,11 @@ export const useFoodScan = () => {
 
   // ---実際の動作を行う関数を定義する---
   //カメラの使用許可&写真を4:3の比率で撮影
-  const startCamera = async () => {
+  const startCamera = async (): Promise<string> => {
     const { granted } = await ImagePicker.requestCameraPermissionsAsync();
     if (!granted) {
       Alert.alert('権限エラー', 'カメラの使用許可を設定からお願いします。');
-      return;
+      return 'error';
     }
 
     const result = await ImagePicker.launchCameraAsync({
@@ -36,11 +36,13 @@ export const useFoodScan = () => {
     if (!result.canceled && result.assets[0].uri) {
       setImageUri(result.assets[0].uri);
       setIsPreviewVisible(true);
+      return result.assets[0].uri;
     }
+    return 'error';
   };
 
   //解析実行
-  const executeAnalysis = async () => {
+  const executeAnalysis = async (imageUri: string) => {
     if (!imageUri) {
       return;
     }
@@ -54,9 +56,7 @@ export const useFoodScan = () => {
       //Servicesを使用してAPIを送信する
       const result = await fetchFoodAnalysis(base64);
       setAnalysisResult(result);
-
-      setIsPreviewVisible(false); //プレビュー画面を閉じる
-      setIsResultVisible(true); //結果モーダルを開く
+      return result;
     } catch (error) {
       console.log('error by useFoodScan.ts', error);
     } finally {
@@ -94,7 +94,9 @@ export const useFoodScan = () => {
     executeAnalysis,
     resetScan,
     retakePhoto,
+    setImageUri,
     setIsPreviewVisible,
     setIsResultVisible,
+    setIsLoading,
   };
 };
