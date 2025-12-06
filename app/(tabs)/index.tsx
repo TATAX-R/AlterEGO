@@ -12,7 +12,6 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-      {/* 2. ペット名表示部分（ここを好みのデザインに変更） */}
       <View style={styles.petHeader}>
         <View style={styles.labelRow}>
           <Text style={styles.label}>Your Pet Name</Text>
@@ -23,10 +22,6 @@ export default function Index() {
         <Text style={styles.petNameText}>{petName}</Text>
       </View>
 
-      {/* 3. コンテンツの他の部分がここに来ます */}
-      {/* <Link href="/details" ... /> など */}
-
-      {/* 4. モーダル本体（通常は最下部に配置） */}
       <PetNameEditModal
         visible={isModalVisible}
         currentName={petName}
@@ -42,15 +37,14 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#fff',
-    // justifyContent: 'center', // 画面構成に合わせて調整
-    paddingTop: 60, // SafeAreaViewがない場合の余白
+    paddingTop: 60,
   },
   petHeader: {
     backgroundColor: '#F8F9FA',
     padding: 16,
     borderRadius: 12,
     alignItems: 'center',
-    marginBottom: 20, // 下のコンテンツとの余白
+    marginBottom: 20,
   },
   labelRow: {
     flexDirection: 'row',
