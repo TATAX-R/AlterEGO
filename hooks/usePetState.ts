@@ -6,11 +6,6 @@ import { PetState, HealthStats, DeathRiskLevel, DiseaseType, Symptom } from '@/t
 
 const STORAGE_KEY = 'pet_state_data';
 
-// 死亡判定の閾値
-const DEATH_THRESHOLD = 100; // いずれかのパラメータがこの値に達したら死亡
-const DANGER_THRESHOLD = 80; // この値以上で危険状態
-const WARNING_THRESHOLD = 50; // この値以上で警告状態
-
 // AsyncStorage保存用の型（Date → string）
 type SerializedPetState = Omit<PetState, 'birthDate' | 'lastFedDate'> & {
   birthDate: string;
@@ -94,27 +89,7 @@ export const usePetState = () => {
   }, [petState.birthDate]);
 
   // =====================================
-  // 3.5. 死亡判定と危険度レベルを計算
-  // =====================================
-  const checkDeathCondition = useCallback(
-    (stats: HealthStats): { shouldDie: boolean; riskLevel: DeathRiskLevel } => {
-      const maxStat = Math.max(...Object.values(stats));
-
-      if (maxStat >= DEATH_THRESHOLD) {
-        return { shouldDie: true, riskLevel: 'danger' };
-      } else if (maxStat >= DANGER_THRESHOLD) {
-        return { shouldDie: false, riskLevel: 'danger' };
-      } else if (maxStat >= WARNING_THRESHOLD) {
-        return { shouldDie: false, riskLevel: 'warning' };
-      } else {
-        return { shouldDie: false, riskLevel: 'safe' };
-      }
-    },
-    []
-  );
-
-  // =====================================
-  // 4. 健康パラメータを更新（死亡判定付き）
+  // 4. 健康パラメータを更新
   // =====================================
   const updateStats = useCallback(
     async (changes: Partial<HealthStats>) => {
@@ -126,26 +101,11 @@ export const usePetState = () => {
         newStats[key] = Math.max(0, Math.min(100, newValue));
       });
 
-      // 死亡判定
-      const { shouldDie, riskLevel } = checkDeathCondition(newStats);
-
-      const newState: PetState = {
-        ...petState,
-        stats: newStats,
-        deathRiskLevel: riskLevel,
-        isAlive: shouldDie ? false : petState.isAlive,
-        mood: shouldDie ? 'sick' : petState.mood,
-      };
-
+      const newState: PetState = { ...petState, stats: newStats };
       setPetState(newState);
       await savePetState(newState);
-
-      // 死亡時にアラートを表示
-      if (shouldDie && petState.isAlive) {
-        Alert.alert('ペットが死亡しました', '健康パラメータが限界に達しました...');
-      }
     },
-    [petState, savePetState, checkDeathCondition]
+    [petState, savePetState]
   );
 
   // =====================================
@@ -236,4 +196,3 @@ export const usePetState = () => {
     revivePet,
   };
 };
-//こめんと
