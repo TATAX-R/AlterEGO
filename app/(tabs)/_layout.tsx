@@ -1,35 +1,34 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import { useColorScheme } from 'react-native';
+import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { useFonts } from 'expo-font';
+import { Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { TamaguiProvider } from 'tamagui';
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import config from '../tamagui.config';
 
-export default function TabLayout() {
+export default function RootLayout() {
   const colorScheme = useColorScheme();
 
+  const [loaded] = useFonts({
+    Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
+    InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
+  });
+
+  if (!loaded) {
+    return null;
+  }
+
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
+    <TamaguiProvider config={config} defaultTheme="light">
+      <ThemeProvider value={DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="index" options={{ title: 'Home' }} />
+          {<Stack.Screen name="(tabs)" options={{ headerShown: false }} />}
+        </Stack>
+
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    </TamaguiProvider>
   );
 }
