@@ -1,5 +1,5 @@
 // hooks/usePetState.ts
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, createContext, useContext, ReactNode } from 'react';
 import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PetState, HealthStats, DeathRiskLevel, DiseaseType, Symptom } from '@/types/index';
@@ -263,4 +263,24 @@ export const usePetState = () => {
     killPet,
     revivePet,
   };
+};
+
+// =====================================
+// Context Provider
+// =====================================
+type PetStateContextType = ReturnType<typeof usePetState>;
+
+const PetStateContext = createContext<PetStateContextType | null>(null);
+
+export const PetStateProvider = ({ children }: { children: ReactNode }) => {
+  const petState = usePetState();
+  return React.createElement(PetStateContext.Provider, { value: petState }, children);
+};
+
+export const usePetStateContext = () => {
+  const context = useContext(PetStateContext);
+  if (!context) {
+    throw new Error('usePetStateContext must be used within PetStateProvider');
+  }
+  return context;
 };

@@ -1,10 +1,10 @@
 // components/PetSurvivalDays/index.tsx
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { usePetState } from '@/hooks/usePetState';
+import { usePetStateContext } from '@/hooks/usePetState';
 
 export const PetSurvivalDays: React.FC = () => {
-  const { survivalDays, isLoading } = usePetState();
+  const { survivalDays, isLoading } = usePetStateContext();
 
   if (isLoading) {
     return (
