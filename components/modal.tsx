@@ -1,7 +1,7 @@
 import { Button, Dialog, YStack, XStack, Separator } from 'tamagui';
 import { Symptom } from '@/types';
 
-type ModalProps = Symptom & {
+type ModalProps = Pick<Symptom, 'tipsTitle' | 'tipsContent'> & {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
@@ -20,7 +20,7 @@ export function Modal({ open, onOpenChange, tipsTitle, tipsContent }: ModalProps
               },
             },
           ]}
-          opacity={0.4}
+          opacity={0.5}
           enterStyle={{ opacity: 0 }}
           exitStyle={{ opacity: 0 }}
           backgroundColor="black"
