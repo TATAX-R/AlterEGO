@@ -1,15 +1,18 @@
 import React from 'react';
-import { YStack, Text } from 'tamagui';
+import { YStack, Text, useTheme } from 'tamagui';
 import { Symptom } from '@/types';
 
 type Props = {
   Symptom: Symptom;
 };
 
-const BUBBLE_BACKGROUND = '#FFFFFF';
-const TEXT_COLOR = '#333333';
+// 統一された色設定
+const BUBBLE_BACKGROUND = '$background';
 
 export const SpeechBubble: React.FC<Props> = ({ Symptom }) => {
+  const theme = useTheme();
+  const backgroundColor = theme.background.val;
+
   const handlePress = () => {
     console.log(Symptom.tipsTitle, Symptom.tipsContent);
   };
@@ -40,15 +43,7 @@ export const SpeechBubble: React.FC<Props> = ({ Symptom }) => {
         elevation={3}
         alignItems="center"
         justifyContent="center">
-        <Text
-          color={TEXT_COLOR}
-          fontSize="$4"
-          $gtSm={{ fontSize: '$5' }}
-          $gtMd={{ fontSize: '$6' }}
-          fontWeight="500"
-          lineHeight="$1"
-          flexWrap="wrap"
-          textAlign="center">
+        <Text fontSize="$9" fontWeight="bold" color="$color">
           {Symptom.text}
         </Text>
       </YStack>
@@ -68,7 +63,7 @@ export const SpeechBubble: React.FC<Props> = ({ Symptom }) => {
           borderTopWidth: 8,
           borderLeftColor: 'transparent',
           borderRightColor: 'transparent',
-          borderTopColor: BUBBLE_BACKGROUND,
+          borderTopColor: backgroundColor,
         }}
       />
 
@@ -82,7 +77,7 @@ export const SpeechBubble: React.FC<Props> = ({ Symptom }) => {
           borderTopWidth: 15,
           borderLeftColor: 'transparent',
           borderRightColor: 'transparent',
-          borderTopColor: '#ffffffff',
+          borderTopColor: backgroundColor,
         }}
       />
     </YStack>
