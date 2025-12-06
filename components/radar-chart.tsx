@@ -5,6 +5,7 @@ import { useFocusEffect } from 'expo-router';
 
 import { DiseaseType, HealthStats } from '@/types/index';
 import { diseaseData, DISEASE_KEYS } from '@/constants/diseases';
+import { Modal } from '@/components/modal';
 
 interface CustomRadarChartProps {
   data: number[];
@@ -145,6 +146,10 @@ interface RadarChartViewProps {
 export default function RadarChartView({ stats }: RadarChartViewProps) {
   const data = DISEASE_KEYS.map((key) => stats[key]);
   const displayLabels = DISEASE_KEYS.map((key) => diseaseData[key].name);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedDisease, setSelectedDisease] = useState<{ name: string; tips: string } | null>(
+    null
+  );
 
   return (
     <View style={styles.container}>
@@ -155,11 +160,18 @@ export default function RadarChartView({ stats }: RadarChartViewProps) {
         maxValue={100}
         onLabelPress={(key) => {
           const diseaseInfo = diseaseData[key];
-          console.log('ID:', diseaseInfo.id);
-          console.log('名前:', diseaseInfo.name);
-          console.log('Tips:', diseaseInfo.tips);
+          setSelectedDisease({ name: diseaseInfo.name, tips: diseaseInfo.tips });
+          setIsOpen(true);
         }}
       />
+      {selectedDisease && (
+        <Modal
+          open={isOpen}
+          onOpenChange={setIsOpen}
+          tipsTitle={selectedDisease.name}
+          tipsContent={selectedDisease.tips}
+        />
+      )}
     </View>
   );
 }
