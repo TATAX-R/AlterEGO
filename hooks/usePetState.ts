@@ -10,6 +10,9 @@ const STORAGE_KEY = 'pet_state_data';
 // 機嫌判定の閾値
 const HAPPY_THRESHOLD = 30; // この値未満ならhappy
 
+// 危険度レベル判定の閾値
+const DANGER_THRESHOLD = 95; // この値以上でdanger（死亡判定ラインに近い）
+
 // AsyncStorage保存用の型（Date → string）
 type SerializedPetState = Omit<PetState, 'birthDate' | 'lastFedDate'> & {
   birthDate: string;
@@ -153,28 +156,64 @@ export const usePetState = () => {
   }, [petState, savePetState]);
 
   // =====================================
-  // 7. 症状を設定
+  // 7. 症状を閾値超えの病気からランダムに選んで設定
   // =====================================
-  const setActiveSymptom = useCallback(
-    async (symptom: Symptom | null) => {
-      const newState: PetState = { ...petState, activeSymptom: symptom };
-      setPetState(newState);
-      await savePetState(newState);
-    },
-    [petState, savePetState]
-  );
+  const updateActiveSymptom = useCallback(async () => {
+    const stats = petState.stats;
+
+    // 閾値を超えている病気を収集
+    const triggeredDiseases = (Object.keys(stats) as DiseaseType[]).filter(
+      (key) => stats[key] >= diseaseData[key].threshold
+    );
+
+    let symptom: Symptom | null = null;
+
+    if (triggeredDiseases.length > 0) {
+      // ランダムに1つの病気を選択
+      const randomDisease = triggeredDiseases[Math.floor(Math.random() * triggeredDiseases.length)];
+      const symptoms = diseaseData[randomDisease].symptoms;
+
+      if (symptoms.length > 0) {
+        // その病気の症状からランダムに1つ選択
+        symptom = symptoms[Math.floor(Math.random() * symptoms.length)];
+      }
+    }
+
+    const newState: PetState = { ...petState, activeSymptom: symptom };
+    setPetState(newState);
+    await savePetState(newState);
+  }, [petState, savePetState]);
 
   // =====================================
-  // 8. 危険度レベルを変更
+  // 8. 危険度レベルを現在のstatsから自動判定して更新
+  // いずれかの病気が発症（threshold以上）していればwarning
+  // いずれかがDANGER_THRESHOLD以上であればdanger
   // =====================================
-  const setDeathRiskLevel = useCallback(
-    async (level: DeathRiskLevel) => {
-      const newState: PetState = { ...petState, deathRiskLevel: level };
-      setPetState(newState);
-      await savePetState(newState);
-    },
-    [petState, savePetState]
-  );
+  const updateDeathRiskLevel = useCallback(async () => {
+    const { stats } = petState;
+    const diseaseTypes = Object.keys(stats) as DiseaseType[];
+
+    // danger判定: いずれかのパラメータがDANGER_THRESHOLD以上
+    const hasDanger = diseaseTypes.some((disease) => stats[disease] >= DANGER_THRESHOLD);
+
+    // warning判定: いずれかの病気が発症中（その病気のthreshold以上）
+    const hasOnset = diseaseTypes.some(
+      (disease) => stats[disease] >= diseaseData[disease].threshold
+    );
+
+    let level: DeathRiskLevel;
+    if (hasDanger) {
+      level = 'danger';
+    } else if (hasOnset) {
+      level = 'warning';
+    } else {
+      level = 'safe';
+    }
+
+    const newState: PetState = { ...petState, deathRiskLevel: level };
+    setPetState(newState);
+    await savePetState(newState);
+  }, [petState, savePetState]);
 
   // =====================================
   // 9. ペットを死亡させる
@@ -210,8 +249,8 @@ export const usePetState = () => {
     updateStats,
     feedPet,
     updateMood,
-    setActiveSymptom,
-    setDeathRiskLevel,
+    updateActiveSymptom,
+    updateDeathRiskLevel,
     killPet,
     revivePet,
   };
