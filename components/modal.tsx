@@ -1,40 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Button, Dialog, Unspaced, YStack, XStack, Separator } from 'tamagui';
+import { Symptom } from '@/types';
 
-export type Symptom = {
-  tipsTitle: string;
-  tipsContent: string;
-};
-
-type ModalProps = {
-  symptom: Symptom;
-};
-
-type SymptomButtonProps = {
-  title: string;
-  onPress: () => void;
-};
-
-export function SymptomButton({ title, onPress }: SymptomButtonProps) {
-  return (
-    <Button theme="accent" size="$5" borderRadius="$10" fontWeight="bold" onPress={onPress}>
-      {title} の詳細を見る
-    </Button>
-  );
-}
-
-type SymptomDialogProps = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  symptom: Symptom;
-};
-
-export function Modal({ symptom }: ModalProps) {
+export function Modal({ id, text, tipsTitle, tipsContent }: Symptom) {
   return (
     <Dialog modal>
       <Dialog.Trigger asChild>
         <Button theme="accent" size="$5" borderRadius="$10" fontWeight="bold">
-          {symptom.tipsTitle} の詳細を見る
+          {tipsTitle} の詳細を見る
         </Button>
       </Dialog.Trigger>
 
@@ -52,7 +25,7 @@ export function Modal({ symptom }: ModalProps) {
           opacity={0.5}
           enterStyle={{ opacity: 0 }}
           exitStyle={{ opacity: 0 }}
-          backgroundColor="#292828ff"
+          backgroundColor="black"
         />
 
         <Dialog.Content
@@ -76,13 +49,13 @@ export function Modal({ symptom }: ModalProps) {
           backgroundColor="$background">
           <YStack gap="$2">
             <Dialog.Title size="$9" fontWeight="bold" color="$color">
-              {symptom.tipsTitle}
+              {tipsTitle}
             </Dialog.Title>
 
-            <Separator borderColor="white" />
+            <Separator borderColor="$color" />
 
             <Dialog.Description size="$4" fontWeight="bold" color="$color" lineHeight={22}>
-              {symptom.tipsContent}
+              {tipsContent}
             </Dialog.Description>
           </YStack>
 
