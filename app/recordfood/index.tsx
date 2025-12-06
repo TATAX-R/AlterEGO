@@ -30,7 +30,7 @@ export default function App() {
 
   const router = useRouter();
   return (
-    <YStack h={900} backgroundColor="$color1" alignItems="center" justifyContent="center" my={5}>
+    <YStack h="100%" backgroundColor="$color1" alignItems="center" justifyContent="center">
       <Stack.Screen
         options={{
           headerShown: false,
@@ -43,7 +43,12 @@ export default function App() {
       )}
       {/* isLoadingがfalseのときのみ表示 */}
       {!isLoading && isSuccess === true && (
-        <XStack borderWidth={0.5} borderColor="#fff" borderRadius={10} backgroundColor="$color2">
+        <XStack
+          borderWidth={0.5}
+          borderColor="#fff"
+          borderRadius={10}
+          backgroundColor="$color2"
+          my={5}>
           <Button
             icon={<MaterialCommunityIcons name="silverware-fork-knife" size={24} color="white" />}
             style={styles.button}
@@ -81,7 +86,12 @@ export default function App() {
         </XStack>
       )}
       {!isLoading && (
-        <XStack borderWidth={0.5} borderColor="#fff" borderRadius={10} backgroundColor="$color2">
+        <XStack
+          borderWidth={0.5}
+          borderColor="#fff"
+          borderRadius={10}
+          backgroundColor="$color2"
+          my={5}>
           <Button
             icon={<Ionicons name="camera" size={24} color="white" />}
             style={styles.button}
@@ -110,7 +120,7 @@ export default function App() {
 const styles = {
   button: {
     margin: 5,
-    width: 200,
+    width: 300,
     color: '$color2',
   },
   marginTop: {

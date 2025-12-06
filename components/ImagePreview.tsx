@@ -17,23 +17,3 @@ export default function ImagePreview({ imageUri }: { imageUri: string }) {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-  },
-  image: {
-    width: 350,
-    height: 300,
-    justifyContent: 'center',
-    marginBottom: 20,
-    borderRadius: 10,
-  },
-  text: {
-    color: '#fff',
-    margin: 5,
-  },
-});
