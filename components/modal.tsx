@@ -1,7 +1,10 @@
 import { Button, Dialog, YStack, XStack, Separator } from 'tamagui';
 import { Symptom } from '@/types';
 
-type ModalProps = Pick<Symptom, 'tipsTitle' | 'tipsContent'> & {
+type ModalProps = {
+  tipsTitle: string;
+  tipsContent: string;
+
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
