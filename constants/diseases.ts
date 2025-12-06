@@ -12,7 +12,7 @@ export const diseaseData: Record<DiseaseType, LifestyleDiseaseInfo> = {
   obesity: {
     id: 'obesity',
     name: '肥満',
-    threshold: 90,
+    threshold: 50,
     symptoms: [
       {
         id: 'palpitation',
@@ -38,7 +38,7 @@ export const diseaseData: Record<DiseaseType, LifestyleDiseaseInfo> = {
   diabetes: {
     id: 'diabetes',
     name: '糖尿病',
-    threshold: 90,
+    threshold: 50,
     symptoms: [
       {
         id: 'thirst',
@@ -58,7 +58,7 @@ export const diseaseData: Record<DiseaseType, LifestyleDiseaseInfo> = {
   hypertension: {
     id: 'hypertension',
     name: '高血圧',
-    threshold: 90,
+    threshold: 50,
     symptoms: [
       {
         id: 'headache',
@@ -84,7 +84,7 @@ export const diseaseData: Record<DiseaseType, LifestyleDiseaseInfo> = {
   dyslipidemia: {
     id: 'dyslipidemia',
     name: '脂質異常症',
-    threshold: 90,
+    threshold: 50,
     symptoms: [
       {
         id: 'chest_pain',
@@ -110,7 +110,7 @@ export const diseaseData: Record<DiseaseType, LifestyleDiseaseInfo> = {
   gout: {
     id: 'gout',
     name: '痛風',
-    threshold: 90,
+    threshold: 50,
     symptoms: [
       {
         id: 'foot_pain',
