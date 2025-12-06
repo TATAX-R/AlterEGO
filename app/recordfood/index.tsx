@@ -1,7 +1,8 @@
-import { Button, Text, XStack, YStack, Image, Spinner } from 'tamagui';
+import { Button, Text, XStack, YStack, Spinner } from 'tamagui';
 import { useFoodScan } from '@/hooks/useFoodScan';
 import { useEffect } from 'react';
 import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
+import { Alert } from 'react-native';
 import ImagePreview from '@/components/ImagePreview';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -37,7 +38,9 @@ export default function App() {
         }}
       />
       <Text fontWeight={800}>ここにペットのアニメーションを置く</Text>
-      {imageUri && <ImagePreview imageUri={Array.isArray(imageUri) ? imageUri[0] : imageUri} />}
+      {imageUri && !isLoading && (
+        <ImagePreview imageUri={Array.isArray(imageUri) ? imageUri[0] : imageUri} />
+      )}
       {/* isLoadingがfalseのときのみ表示 */}
       {!isLoading && isSuccess === true && (
         <Button
@@ -55,6 +58,7 @@ export default function App() {
                 const stringResult = JSON.stringify(result);
                 if (result.isFood === false) {
                   setIsSuccess(false);
+                  Alert.alert('これは食べ物ではないようです。別の写真を試してください。');
                   return;
                 }
                 setIsSuccess(true);
@@ -86,13 +90,8 @@ export default function App() {
       {isLoading && (
         <XStack alignItems="center" style={styles.marginTop}>
           <Spinner size="large" color="white" style={{ marginRight: 10 }} />
-          <Text fontSize={20}>解析中...</Text>
+          <Text fontSize={20}>食事中...</Text>
         </XStack>
-      )}
-      {isSuccess === false && !isLoading && (
-        <Text fontSize={16} color="red" style={styles.text}>
-          これは食べ物ではないようです。 {'\n'}別の写真を試してください。
-        </Text>
       )}
     </YStack>
   );
@@ -102,6 +101,7 @@ const styles = {
   button: {
     margin: 5,
     width: 200,
+    color: '$color2',
   },
   marginTop: {
     marginTop: 20,

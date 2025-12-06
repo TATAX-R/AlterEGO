@@ -9,8 +9,8 @@ export default function ImagePreview({ imageUri }: { imageUri: string }) {
           source={{ uri: imageUri }}
           width={300}
           height={250}
-          borderWidth={3}
-          borderColor="black"
+          borderWidth={0.5}
+          borderColor="white"
           borderRadius={20}
         />
       </YStack>
