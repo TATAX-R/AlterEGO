@@ -1,98 +1,69 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { MaterialIcons } from '@expo/vector-icons';
 
-export default function HomeScreen() {
+import { usePetName } from '@/hooks/usePetName';
+import { PetNameEditModal } from '@/components/PetName/PetNameEditModal';
+
+export default function Index() {
+  const { petName, updatePetName } = usePetName();
+  const [isModalVisible, setModalVisible] = useState(false);
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    <View style={styles.container}>
+      {/* 2. ペット名表示部分（ここを好みのデザインに変更） */}
+      <View style={styles.petHeader}>
+        <View style={styles.labelRow}>
+          <Text style={styles.label}>Your Pet Name</Text>
+          <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.editButton}>
+            <MaterialIcons name="edit" size={16} color="#888" />
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.petNameText}>{petName}</Text>
+      </View>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      {/* 3. コンテンツの他の部分がここに来ます */}
+      {/* <Link href="/details" ... /> など */}
+
+      {/* 4. モーダル本体（通常は最下部に配置） */}
+      <PetNameEditModal
+        visible={isModalVisible}
+        currentName={petName}
+        onClose={() => setModalVisible(false)}
+        onSave={(newName) => updatePetName(newName)}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#fff',
+    // justifyContent: 'center', // 画面構成に合わせて調整
+    paddingTop: 60, // SafeAreaViewがない場合の余白
+  },
+  petHeader: {
+    backgroundColor: '#F8F9FA',
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginBottom: 20, // 下のコンテンツとの余白
+  },
+  labelRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
     marginBottom: 8,
+    gap: 6,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  label: {
+    fontSize: 12,
+    color: '#888',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
   },
+  petNameText: { fontSize: 24, fontWeight: 'bold', color: '#333' },
+  editButton: { padding: 4 },
 });
