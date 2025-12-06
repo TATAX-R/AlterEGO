@@ -4,6 +4,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { TamaguiProvider } from 'tamagui';
+import { PetStateProvider } from '@/hooks/usePetState';
 
 import config from '../tamagui.config';
 
@@ -21,14 +22,16 @@ export default function RootLayout() {
 
   return (
     <TamaguiProvider config={config} defaultTheme="light">
-      <ThemeProvider value={DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="index" options={{ title: 'Home' }} />
-          {<Stack.Screen name="(tabs)" options={{ headerShown: false }} />}
-        </Stack>
+      <PetStateProvider>
+        <ThemeProvider value={DefaultTheme}>
+          <Stack>
+            <Stack.Screen name="index" options={{ title: 'Home' }} />
+            {<Stack.Screen name="(tabs)" options={{ headerShown: false }} />}
+          </Stack>
 
-        <StatusBar style="auto" />
-      </ThemeProvider>
+          <StatusBar style="auto" />
+        </ThemeProvider>
+      </PetStateProvider>
     </TamaguiProvider>
   );
 }
