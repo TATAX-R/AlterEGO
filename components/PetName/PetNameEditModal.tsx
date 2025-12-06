@@ -66,16 +66,25 @@ export const PetNameEditModal = ({ visible, currentName, onClose, onSave }: Prop
             onChangeText={handleTextChange}
             placeholder="新しい名前を入力"
             autoFocus
+            accessibilityLabel="ペット名入力欄"
           />
 
           {showWarning && <Text style={styles.warningText}>10文字以内で入力してください</Text>}
 
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={[styles.button, styles.buttonCancel]} onPress={onClose}>
+            <TouchableOpacity
+              style={[styles.button, styles.buttonCancel]}
+              onPress={onClose}
+              accessibilityLabel="キャンセルボタン"
+              accessibilityRole="button">
               <Text style={styles.textCancel}>キャンセル</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.button, styles.buttonSave]} onPress={handleSave}>
+            <TouchableOpacity
+              style={[styles.button, styles.buttonSave]}
+              onPress={handleSave}
+              accessibilityLabel="保存ボタン"
+              accessibilityRole="button">
               <Text style={styles.textSave}>保存</Text>
             </TouchableOpacity>
           </View>
