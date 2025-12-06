@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
+import { Platform } from 'react-native';
+import { YStack } from 'tamagui';
 import {
   StepMessage,
   StepProgressBar,
@@ -9,29 +10,23 @@ import {
 import { useStepCounter } from '@/hooks/useStepCounter';
 
 export default function StepsScreen() {
+  const { stepData, progress } = useStepCounter();
+
   // AndroidのExpo Goでは歩数計が利用できない
   if (Platform.OS === 'android') {
     return (
-      <View style={styles.page}>
+      <YStack flex={1} backgroundColor="$background" alignItems="center" padding={20}>
         <StepUnavailableNotice />
-      </View>
+      </YStack>
     );
   }
 
-  const { stepData, progress } = useStepCounter();
-  const isGoalReached = stepData.todaySteps >= stepData.targetSteps;
-
   return (
-    <View style={styles.page}>
-      <StepMessage isGoalReached={isGoalReached} />
+    <YStack flex={1} backgroundColor="$background" alignItems="center" padding={20}>
+      <StepMessage stepData={stepData} />
       <StepProgressBar progress={progress} />
-      <View style={styles.spacer} />
+      <YStack flex={1} />
       <StepCount stepData={stepData} />
-    </View>
+    </YStack>
   );
 }
-
-const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: '#fff', alignItems: 'center', padding: 20 },
-  spacer: { flex: 1 },
-});
