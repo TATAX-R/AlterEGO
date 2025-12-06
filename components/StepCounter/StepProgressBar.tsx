@@ -1,60 +1,39 @@
 // components/StepCounter/StepProgressBar.tsx
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { useState, useCallback } from 'react';
+import { useFocusEffect } from 'expo-router';
+
+import { Progress } from 'tamagui';
 
 type StepProgressBarProps = {
   progress: number; // 0〜100
 };
 
 export const StepProgressBar = ({ progress }: StepProgressBarProps) => {
+  const [progressState, setProgress] = useState(0);
+
+  useFocusEffect(
+    useCallback(() => {
+      // 1. 画面がフォーカスされたら、まず0にリセット (アニメーションの開始位置)
+      setProgress(0);
+
+      // 2. わずかな遅延を入れてから目標値をセット
+      // これにより、0の状態が描画された後に目標値への変化が起き、アニメーションが走ります
+      const timer = setTimeout(() => {
+        setProgress(progress);
+      }, 100); // 100ms程度の遅延推奨
+
+      // 3. クリーンアップ関数（画面から離れる時や再実行前）
+      return () => {
+        clearTimeout(timer);
+        setProgress(0); // 画面から離れるときも0に戻しておく
+      };
+    }, [])
+  );
+
   return (
-    <View style={styles.progressContainer}>
-      <View style={styles.progressBar}>
-        <View style={[styles.progressFill, { width: `${progress}%` }]} />
-        {/* 目標の目印 */}
-        <View style={styles.goalMarker}>
-          <View style={styles.goalLine} />
-          <Text style={styles.goalText}>目標</Text>
-        </View>
-      </View>
-    </View>
+    <Progress value={progressState} size={'$6'} style={{ width: '100%' }} backgroundColor="$color5">
+      <Progress.Indicator animation="lazy" backgroundColor={'$accent2'} />
+    </Progress>
   );
 };
-
-const styles = StyleSheet.create({
-  progressContainer: {
-    width: '90%',
-    marginTop: 60,
-    marginBottom: 20,
-  },
-  progressBar: {
-    height: 40,
-    backgroundColor: '#f2f2f2',
-    borderRadius: 20,
-    overflow: 'visible',
-    position: 'relative',
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: '#f39c12',
-    borderRadius: 20,
-  },
-  goalMarker: {
-    position: 'absolute',
-    right: 0,
-    top: -8,
-    alignItems: 'center',
-  },
-  goalLine: {
-    width: 3,
-    height: 56,
-    backgroundColor: '#e74c3c',
-    borderRadius: 2,
-  },
-  goalText: {
-    fontSize: 12,
-    color: '#e74c3c',
-    fontWeight: 'bold',
-    marginTop: 2,
-  },
-});
