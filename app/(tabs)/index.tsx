@@ -33,7 +33,7 @@ export default function WorldScreen() {
 
   const groundColor = theme.background.get();
 
-  const GROUND_HEIGHT = 250;
+  const GROUND_HEIGHT = 220;
 
   return (
     <YStack flex={1} backgroundColor="#45E6E6" position="relative">
