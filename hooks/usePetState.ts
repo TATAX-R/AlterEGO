@@ -49,11 +49,18 @@ export const usePetState = () => {
         const stored = await AsyncStorage.getItem(STORAGE_KEY);
         if (stored) {
           const parsed: SerializedPetState = JSON.parse(stored);
-          // Date型に復元
+          // Date型に復元し、バリデーション
+          const birthDate = new Date(parsed.birthDate);
+          const lastFedDate = new Date(parsed.lastFedDate);
+          if (isNaN(birthDate.getTime()) || isNaN(lastFedDate.getTime())) {
+            console.error('Invalid date in stored data, using initial state');
+            setPetState(createInitialPetState());
+            return;
+          }
           const restored: PetState = {
             ...parsed,
-            birthDate: new Date(parsed.birthDate),
-            lastFedDate: new Date(parsed.lastFedDate),
+            birthDate,
+            lastFedDate,
           };
           setPetState(restored);
         }
