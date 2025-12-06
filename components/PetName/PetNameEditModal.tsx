@@ -1,15 +1,6 @@
 // components/PetName/PetNameEditModal.tsx
 import React, { useState, useEffect } from 'react';
-import {
-  Modal,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
+import { Dialog, Button, YStack, XStack, Text, Input, Separator } from 'tamagui';
 
 type Props = {
   visible: boolean;
@@ -53,98 +44,91 @@ export const PetNameEditModal = ({ visible, currentName, onClose, onSave }: Prop
   };
 
   return (
-    <Modal animationType="fade" transparent={true} visible={visible} onRequestClose={onClose}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={styles.modalTitle}>名前を変更</Text>
+    <Dialog modal open={visible} onOpenChange={(open) => !open && onClose()}>
+      <Dialog.Portal>
+        <Dialog.Overlay
+          key="overlay"
+          animation={[
+            'quick',
+            {
+              opacity: {
+                overshootClamping: true,
+              },
+            },
+          ]}
+          opacity={0.5}
+          enterStyle={{ opacity: 0 }}
+          exitStyle={{ opacity: 0 }}
+          backgroundColor="black"
+        />
 
-          <TextInput
-            style={styles.input}
-            value={name}
-            onChangeText={handleTextChange}
-            placeholder="新しい名前を入力"
-            autoFocus
-            accessibilityLabel="ペット名入力欄"
-          />
+        <Dialog.Content
+          bordered
+          elevate
+          key="content"
+          animateOnly={['transform', 'opacity']}
+          animation={[
+            'quick',
+            {
+              opacity: {
+                overshootClamping: true,
+              },
+            },
+          ]}
+          enterStyle={{ x: 0, y: -20, opacity: 0, scale: 0.9 }}
+          exitStyle={{ x: 0, y: 10, opacity: 0, scale: 0.95 }}
+          gap="$4"
+          width="90%"
+          maxWidth={400}
+          backgroundColor="$background">
+          <YStack gap="$3">
+            {/* タイトル */}
+            <Dialog.Title size="$8" fontWeight="bold" color="$color" textAlign="center">
+              名前を変更
+            </Dialog.Title>
 
-          {showWarning && <Text style={styles.warningText}>10文字以内で入力してください</Text>}
+            <Separator borderColor="$color5" />
 
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={[styles.button, styles.buttonCancel]}
-              onPress={onClose}
-              accessibilityLabel="キャンセル"
-              accessibilityRole="button">
-              <Text style={styles.textCancel}>キャンセル</Text>
-            </TouchableOpacity>
+            {/* 入力フィールド */}
+            <Input
+              size="$4"
+              value={name}
+              onChangeText={handleTextChange}
+              placeholder="新しい名前を入力"
+              autoFocus
+              textAlign="center"
+              borderWidth={0}
+              borderBottomWidth={1}
+              borderBottomColor="$color5"
+              borderRadius={0}
+              backgroundColor="transparent"
+            />
 
-            <TouchableOpacity
-              style={[styles.button, styles.buttonSave]}
-              onPress={handleSave}
-              accessibilityLabel="保存"
-              accessibilityRole="button">
-              <Text style={styles.textSave}>保存</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
-    </Modal>
+            {/* 警告メッセージ */}
+            {showWarning && (
+              <Text fontSize="$2" color="$red10" textAlign="center">
+                10文字以内で入力してください
+              </Text>
+            )}
+          </YStack>
+
+          {/* ボタン */}
+          <XStack gap="$3" justifyContent="center">
+            <Button flex={1} size="$4" backgroundColor="$color4" color="$color11" onPress={onClose}>
+              キャンセル
+            </Button>
+            <Button
+              flex={1}
+              size="$4"
+              theme="active"
+              backgroundColor="$blue9"
+              color="white"
+              onPress={handleSave}>
+              保存
+            </Button>
+          </XStack>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog>
   );
 };
-
-const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalView: {
-    width: '85%',
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 25,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    elevation: 5,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
-  },
-  input: {
-    width: '100%',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-    fontSize: 18,
-    padding: 10,
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  warningText: {
-    color: '#e74c3c',
-    fontSize: 12,
-    marginBottom: 20,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  button: {
-    borderRadius: 10,
-    padding: 12,
-    width: '45%',
-    alignItems: 'center',
-  },
-  buttonCancel: { backgroundColor: '#f5f5f5' },
-  buttonSave: { backgroundColor: '#007AFF' },
-  textCancel: { color: '#666', fontWeight: 'bold' },
-  textSave: { color: 'white', fontWeight: 'bold' },
-});
