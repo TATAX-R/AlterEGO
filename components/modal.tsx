@@ -1,16 +1,14 @@
-import { Ionicons } from '@expo/vector-icons';
-import { Button, Dialog, Unspaced, YStack, XStack, Separator } from 'tamagui';
+import { Button, Dialog, YStack, XStack, Separator } from 'tamagui';
 import { Symptom } from '@/types';
 
-export function Modal({ id, text, tipsTitle, tipsContent }: Symptom) {
-  return (
-    <Dialog modal>
-      <Dialog.Trigger asChild>
-        <Button theme="accent" size="$5" borderRadius="$10" fontWeight="bold">
-          {tipsTitle} の詳細を見る
-        </Button>
-      </Dialog.Trigger>
+type ModalProps = Symptom & {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
 
+export function Modal({ open, onOpenChange, tipsTitle, tipsContent }: ModalProps) {
+  return (
+    <Dialog modal open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay
           key="overlay"
@@ -22,7 +20,7 @@ export function Modal({ id, text, tipsTitle, tipsContent }: Symptom) {
               },
             },
           ]}
-          opacity={0.5}
+          opacity={0.4}
           enterStyle={{ opacity: 0 }}
           exitStyle={{ opacity: 0 }}
           backgroundColor="black"
@@ -64,8 +62,6 @@ export function Modal({ id, text, tipsTitle, tipsContent }: Symptom) {
               <Button>閉じる</Button>
             </Dialog.Close>
           </XStack>
-
-          <Unspaced></Unspaced>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog>
