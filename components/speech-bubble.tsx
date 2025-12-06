@@ -25,7 +25,7 @@ export const SpeechBubble: React.FC<Props> = ({ symptom }) => {
       $gtSm={{ width: 'auto' }}
       cursor="pointer"
       onPress={handlePress}
-      pressStyle={{ backgroundColor: '#ffffff', scale: 0.98 }}>
+      pressStyle={{ scale: 0.98 }}>
       <YStack
         width="90%"
         maxWidth={280}
