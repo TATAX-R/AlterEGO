@@ -11,9 +11,9 @@ import { useStepCounter } from '@/hooks/useStepCounter';
 
 export default function StepsScreen() {
   const { stepData, progress } = useStepCounter();
-  
+
   // AndroidのExpo Goでは歩数計が利用できない
-  if (Platform.OS === 'ios') {
+  if (Platform.OS === 'android') {
     return (
       <YStack flex={1} backgroundColor="$background" alignItems="center" padding={20}>
         <StepUnavailableNotice />

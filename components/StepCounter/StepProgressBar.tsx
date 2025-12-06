@@ -28,7 +28,7 @@ export const StepProgressBar = ({ progress }: StepProgressBarProps) => {
         clearTimeout(timer);
         setProgress(0); // 画面から離れるときも0に戻しておく
       };
-    }, [])
+    }, [progress])
   );
 
   return (

@@ -56,7 +56,7 @@ export const StepCount = ({ stepData }: StepCountProps) => {
       <Svg height="2" width="200" style={{ marginVertical: 8 }}>
         <Line x1="0" y1="1" x2="200" y2="1" stroke="#666" strokeWidth="2" />
       </Svg>
-      <Text fontSize={18} color="$coloer6">
+      <Text fontSize={18} color="$color6">
         {stepData.targetSteps.toLocaleString()} 歩
       </Text>
     </YStack>
