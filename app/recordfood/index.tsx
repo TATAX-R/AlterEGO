@@ -29,7 +29,7 @@ export default function App() {
 
   const router = useRouter();
   return (
-    <YStack h={900} backgroundColor="$background" alignItems="center" justifyContent="center">
+    <YStack h={900} backgroundColor="$color1" alignItems="center" justifyContent="center">
       <Stack.Screen
         options={{
           headerShown: false,
@@ -60,7 +60,7 @@ export default function App() {
                 setIsSuccess(true);
                 router.push({
                   pathname: '/recordfood/resultfood',
-                  params: { response: stringResult },
+                  params: { response: stringResult, imgUri: validUri },
                 });
               }
             }
@@ -74,6 +74,7 @@ export default function App() {
         <Button
           icon={<Ionicons name="camera" size={24} color="white" />}
           style={styles.button}
+          animation="bouncy"
           onPress={async () => {
             const img = await startCamera();
             setIsSuccess(true);

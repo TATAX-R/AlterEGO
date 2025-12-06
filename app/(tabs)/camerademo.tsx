@@ -18,7 +18,7 @@ export default function App() {
   };
   return (
     <YStack
-      backgroundColor="$background"
+      backgroundColor="$color1"
       h={800}
       alignContent="center"
       justifyContent="center"

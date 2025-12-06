@@ -5,16 +5,17 @@ import { useRouter } from 'expo-router';
 export default function BackHomeButton() {
   const router = useRouter();
   return (
-    <Button style={styles.button} onPress={() => router.dismissAll()}>
+    <Button
+      margin={10}
+      w="100%"
+      backgroundColor="$color1"
+      shadowColor="#fff"
+      shadowOffset={{ width: 2, height: 2 }}
+      shadowOpacity={0.3}
+      shadowRadius={4}
+      borderRadius={8}
+      onPress={() => router.dismissAll()}>
       <Text>戻る</Text>
     </Button>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    position: 'absolute',
-    top: 50,
-    left: 10,
-  },
-});
