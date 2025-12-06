@@ -30,7 +30,7 @@ export default function App() {
 
   const router = useRouter();
   return (
-    <YStack h={900} backgroundColor="$color1" alignItems="center" justifyContent="center">
+    <YStack h={900} backgroundColor="$color1" alignItems="center" justifyContent="center" my={5}>
       <Stack.Screen
         options={{
           headerShown: false,
@@ -43,49 +43,59 @@ export default function App() {
       )}
       {/* isLoadingがfalseのときのみ表示 */}
       {!isLoading && isSuccess === true && (
-        <Button
-          icon={<MaterialCommunityIcons name="silverware-fork-knife" size={24} color="white" />}
-          style={styles.button}
-          onPress={async () => {
-            setIsLoading(true);
-            const validUri = Array.isArray(imageUri) ? imageUri[0] : imageUri;
-            if (validUri) {
-              //imgの値が存在した場合のみ送信する
-              setImageUri(validUri);
-              const result = await executeAnalysis(validUri);
-              if (result?.message) {
-                setIsLoading(false);
-                const stringResult = JSON.stringify(result);
-                if (result.isFood === false) {
-                  setIsSuccess(false);
-                  Alert.alert('これは食べ物ではないようです。別の写真を試してください。');
-                  return;
+        <XStack borderWidth={0.5} borderColor="#fff" borderRadius={10} backgroundColor="$color2">
+          <Button
+            icon={<MaterialCommunityIcons name="silverware-fork-knife" size={24} color="white" />}
+            style={styles.button}
+            backgroundColor="$color2"
+            borderBlockColor="#fff"
+            borderWidth={0}
+            m={3}
+            onPress={async () => {
+              setIsLoading(true);
+              const validUri = Array.isArray(imageUri) ? imageUri[0] : imageUri;
+              if (validUri) {
+                //imgの値が存在した場合のみ送信する
+                setImageUri(validUri);
+                const result = await executeAnalysis(validUri);
+                if (result?.message) {
+                  setIsLoading(false);
+                  const stringResult = JSON.stringify(result);
+                  if (result.isFood === false) {
+                    setIsSuccess(false);
+                    Alert.alert('これは食べ物ではないようです。別の写真を試してください。');
+                    return;
+                  }
+                  setIsSuccess(true);
+                  router.push({
+                    pathname: '/recordfood/resultfood',
+                    params: { response: stringResult, imgUri: validUri },
+                  });
                 }
-                setIsSuccess(true);
-                router.push({
-                  pathname: '/recordfood/resultfood',
-                  params: { response: stringResult, imgUri: validUri },
-                });
               }
-            }
-          }}
-          animation="bouncy"
-          pressStyle={{ scale: 0.9 }}>
-          食べさせる！
-        </Button>
+            }}
+            animation="bouncy"
+            pressStyle={{ scale: 0.9 }}>
+            食べさせる！
+          </Button>
+        </XStack>
       )}
       {!isLoading && (
-        <Button
-          icon={<Ionicons name="camera" size={24} color="white" />}
-          style={styles.button}
-          animation="bouncy"
-          onPress={async () => {
-            const img = await startCamera();
-            setIsSuccess(true);
-            setImageUri(img);
-          }}>
-          撮影し直す
-        </Button>
+        <XStack borderWidth={0.5} borderColor="#fff" borderRadius={10} backgroundColor="$color2">
+          <Button
+            icon={<Ionicons name="camera" size={24} color="white" />}
+            style={styles.button}
+            animation="bouncy"
+            backgroundColor="$color2"
+            m={3}
+            onPress={async () => {
+              const img = await startCamera();
+              setIsSuccess(true);
+              setImageUri(img);
+            }}>
+            撮影し直す
+          </Button>
+        </XStack>
       )}
       {isLoading && (
         <XStack alignItems="center" style={styles.marginTop}>
