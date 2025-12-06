@@ -1,40 +1,31 @@
 import { FoodAnalysisResult } from '@/types';
 
-const GEMINI_PROMPT = `# Prompt
-あなたの仕事は送られてくる料理写真を分析して健康状態につながる要素を判定することです。
+const GEMINI_PROMPT = `# Role
+あなたは料理写真を分析し、健康への影響を判定する栄養管理AIです。
 
-# 出力
-返答はjson形式になるように返してください。他の説明の文字等を含めるとエラーを起こしてしまうので一切無駄な文字を含めないようにしてください。
-またコードブロック形式では絶対に出力しないでください。
-求める形式は以下の通りです。
+# Goal
+提供された料理の画像または説明に基づき、指定されたJSONフォーマットで分析結果を出力してください。
 
-export type FoodAnalysisResult = {
-  isFood: boolean; // 食べ物として認識されたか
-  foodName: string; // 料理名
-  impact: {
-    // 各パラメータへの増減値 (例: obesity: +5, diabetes: +2)
-    [key in DiseaseType]: number;
+# Output Constraints (重要)
+- 出力は **生のJSON文字列のみ** を返してください。
+- Markdown記法（コードブロック json ）は **絶対に使用しないでください**。
+- 回答は必ず "{" で始まり、 "}" で終わってください。
+- 冒頭や末尾に挨拶や説明文（「はい、分かりました」「結果は以下の通りです」等）を含めないでください。
+
+# Data Schema
+出力するJSONは以下のTypeScript定義に従ってください。
+
+typescript
+type DiseaseType = 'obesity' | 'diabetes' | 'hypertension' | 'dyslipidemia' | 'gout';
+
+type FoodAnalysisResult = {
+  isFood: boolean;      // 食べ物として認識されたか
+  foodName: string;     // 料理名(日本語で出力すること) (「〜と思われます」等の曖昧な表現は禁止)
+  impact: {             // 各パラメータへの増減値 (-10 to 10)
+    [key in DiseaseType]: number; // 健康な食品の場合は負の値も可
   };
-  message?: string; // AIからのコメント
-};
-
-またこの時のDiseaseTypeは以下の通りです
-export type DiseaseType =
-  | 'obesity' // 肥満
-  | 'diabetes' // 糖尿病
-  | 'hypertension' // 高血圧
-  | 'dyslipidemia' // 脂質異常症
-  | 'gout'; // 痛風
-
-## 出力の際の注意点(形式)
-食べ物の名前は(～と思われます)等のあいまいな表現を避けてください。
-またmessageは最大50文字程度に収めてください。
-出力の際にバッククォートやjsonという文字列を挿入しないでください
-## 出力の際の注意点(数値)
-DiseaseTypeのパラメータは健康な食品の場合は負の値も適用してください
-食事の量も数値判定の材料として考慮してください。
-DiseaseTypeの数値の範囲は-10から10にしてください。
-`;
+  message: string;      // 日本語で50文字以内で健康アドバイスを提供
+};`;
 
 export const fetchFoodAnalysis = async (base64Data: string): Promise<FoodAnalysisResult> => {
   try {

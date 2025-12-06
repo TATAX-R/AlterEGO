@@ -1,3 +1,4 @@
+import { FoodAnalysisResult } from './../types/index';
 import { GoogleGenAI } from '@google/genai';
 
 const GEMINI_API_KEY_KEY = process.env.EXPO_PUBLIC_GEMINI_API_KEY;

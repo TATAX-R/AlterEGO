@@ -14,9 +14,10 @@ export const useFoodScan = () => {
   //モーダルの開閉管理
   const [isPreviewVisible, setIsPreviewVisible] = useState(false); //プレビューに使用
   const [isResultVisible, setIsResultVisible] = useState(false); //　結果表示用
-
+  //ローディング状態管理
   const [isLoading, setIsLoading] = useState(false);
 
+  const [isSuccess, setIsSuccess] = useState(false);
   // ---実際の動作を行う関数を定義する---
   //カメラの使用許可&写真を4:3の比率で撮影
   const startCamera = async (): Promise<string> => {
@@ -84,12 +85,13 @@ export const useFoodScan = () => {
     imageUri,
     analysisResult,
     isLoading,
-
+    isSuccess,
     //Modal States
     isPreviewVisible,
     isResultVisible,
 
     //Functions
+    setIsSuccess,
     startCamera,
     executeAnalysis,
     resetScan,

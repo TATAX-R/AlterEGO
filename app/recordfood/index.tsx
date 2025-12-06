@@ -1,4 +1,5 @@
 import { Button, Text, XStack, YStack, Image } from 'tamagui';
+import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFoodScan } from '@/hooks/useFoodScan';
 import { useState, useEffect, useRef } from 'react';
 import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
@@ -25,11 +26,10 @@ export default function App() {
       setImageUri(uriToSet);
     }
   }, [imageUriFirst]);
-  const [aiMessage, setAiMessage] = useState('ここにメッセージが表示されます');
 
   const router = useRouter();
   return (
-    <YStack h={800} backgroundColor="$green10Light" alignItems="center" justifyContent="center">
+    <YStack h={800} backgroundColor="$background" alignItems="center" justifyContent="center">
       <Stack.Screen
         options={{
           title: '食事を記録する',
@@ -50,8 +50,10 @@ export default function App() {
               const result = await executeAnalysis(validUri);
               if (result?.message) {
                 setIsLoading(false);
-                setAiMessage(result.message);
                 const stringResult = JSON.stringify(result);
+                if (result.isFood === false) {
+                  return;
+                }
                 router.push({
                   pathname: '/recordfood/resultfood',
                   params: { response: stringResult },
@@ -75,7 +77,6 @@ export default function App() {
         </Button>
       )}
       {isLoading && <Text>解析中...</Text>}
-      <BackHomeButton />
     </YStack>
   );
 }
