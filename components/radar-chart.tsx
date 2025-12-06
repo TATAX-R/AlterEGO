@@ -92,8 +92,8 @@ function CustomRadarChart({
           <Polygon
             key={i}
             points={getPolygonPoints(level)}
-            stroke={level === 1 ? '#919191ff' : '#e1e1e1ff'}
-            strokeWidth={1}
+            stroke={level === 1 ? '#919191ff' : level === 0.5 ? '#fcc7c7ff' : '#e1e1e1ff'}
+            strokeWidth={level === 0.5 ? 1.5 : 1}
             fill={level === 1 ? '#fcc7c7ff' : '#ffffffff'}
           />
         ))}
