@@ -6,7 +6,6 @@ import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Link } from 'expo-router';
-import { JudgeHealth } from '@/components/judge-health';
 
 export default function HomeScreen() {
   return (
@@ -60,8 +59,6 @@ export default function HomeScreen() {
             </Link.Menu>
           </Link.Menu>
         </Link>
-
-        <JudgeHealth level="danger"></JudgeHealth>
 
         <ThemedText>
           {`Tap the Explore tab to learn more about what's included in this starter app.`}
