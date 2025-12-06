@@ -3,8 +3,12 @@ import { useState, useEffect, useCallback } from 'react';
 import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PetState, HealthStats, DeathRiskLevel, DiseaseType, Symptom } from '@/types/index';
+import { diseaseData } from '@/constants/diseases';
 
 const STORAGE_KEY = 'pet_state_data';
+
+// 機嫌判定の閾値
+const HAPPY_THRESHOLD = 30; // この値未満ならhappy
 
 // AsyncStorage保存用の型（Date → string）
 type SerializedPetState = Omit<PetState, 'birthDate' | 'lastFedDate'> & {
@@ -121,16 +125,32 @@ export const usePetState = () => {
   }, [petState, savePetState]);
 
   // =====================================
-  // 6. 機嫌を変更
+  // 6. 機嫌を現在のstatsから自動判定して更新
   // =====================================
-  const setMood = useCallback(
-    async (mood: PetState['mood']) => {
-      const newState: PetState = { ...petState, mood };
-      setPetState(newState);
-      await savePetState(newState);
-    },
-    [petState, savePetState]
-  );
+  const updateMood = useCallback(async () => {
+    const stats = petState.stats;
+    const maxStat = Math.max(...Object.values(stats));
+
+    // 発症閾値（各病気の最小値を使用）
+    const thresholds = Object.keys(stats).map((key) => diseaseData[key as DiseaseType].threshold);
+    const minThreshold = Math.min(...thresholds);
+
+    let mood: PetState['mood'];
+    if (maxStat >= minThreshold) {
+      // いずれかが発症閾値以上 → sick
+      mood = 'sick';
+    } else if (maxStat >= HAPPY_THRESHOLD) {
+      // 30以上だが発症前 → normal
+      mood = 'normal';
+    } else {
+      // 30未満 → happy
+      mood = 'happy';
+    }
+
+    const newState: PetState = { ...petState, mood };
+    setPetState(newState);
+    await savePetState(newState);
+  }, [petState, savePetState]);
 
   // =====================================
   // 7. 症状を設定
@@ -189,7 +209,7 @@ export const usePetState = () => {
     // 更新関数
     updateStats,
     feedPet,
-    setMood,
+    updateMood,
     setActiveSymptom,
     setDeathRiskLevel,
     killPet,
