@@ -33,7 +33,7 @@ export default function WorldScreen() {
 
   const groundColor = theme.background.get();
 
-  const GROUND_HEIGHT = 200;
+  const GROUND_HEIGHT = 250;
 
   return (
     <YStack flex={1} backgroundColor="#45E6E6" position="relative">
@@ -52,7 +52,7 @@ export default function WorldScreen() {
         width="100%"
         height="100%"
         zIndex={1}
-        y={150}
+        y={100}
         pointerEvents="none">
         <LottieView
           source={require('@/assets/lottie/pig-idle.json')}
