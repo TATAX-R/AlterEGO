@@ -92,6 +92,15 @@ export const usePetState = () => {
   }, []);
 
   // =====================================
+  // 2.5. petStateが変化したときに自動保存
+  // =====================================
+  useEffect(() => {
+    if (!isLoading) {
+      savePetState(petState);
+    }
+  }, [petState, isLoading, savePetState]);
+
+  // =====================================
   // 3. 生存日数を計算
   // =====================================
   const getSurvivalDays = useCallback((): number => {
@@ -106,7 +115,7 @@ export const usePetState = () => {
   // 4. 健康パラメータを更新
   // =====================================
   const updateStats = useCallback(
-    async (changes: Partial<HealthStats>) => {
+    (changes: Partial<HealthStats>) => {
       const newStats = { ...petState.stats };
 
       // 各パラメータを更新（0-100の範囲に収める）
@@ -117,27 +126,25 @@ export const usePetState = () => {
 
       const newState: PetState = { ...petState, stats: newStats };
       setPetState(newState);
-      await savePetState(newState);
     },
-    [petState, savePetState]
+    [petState]
   );
 
   // =====================================
   // 5. 餌やり（lastFedDateを更新）
   // =====================================
-  const feedPet = useCallback(async () => {
+  const feedPet = useCallback(() => {
     const newState: PetState = {
       ...petState,
       lastFedDate: new Date(),
     };
     setPetState(newState);
-    await savePetState(newState);
-  }, [petState, savePetState]);
+  }, [petState]);
 
   // =====================================
   // 6. 機嫌を現在のstatsから自動判定して更新
   // =====================================
-  const updateMood = useCallback(async () => {
+  const updateMood = useCallback(() => {
     const stats = petState.stats;
     const maxStat = Math.max(...Object.values(stats));
 
@@ -159,13 +166,12 @@ export const usePetState = () => {
 
     const newState: PetState = { ...petState, mood };
     setPetState(newState);
-    await savePetState(newState);
-  }, [petState, savePetState]);
+  }, [petState]);
 
   // =====================================
   // 7. 症状を閾値超えの病気からランダムに選んで設定
   // =====================================
-  const updateActiveSymptom = useCallback(async () => {
+  const updateActiveSymptom = useCallback(() => {
     const stats = petState.stats;
 
     // 閾値を超えている病気を収集
@@ -188,15 +194,14 @@ export const usePetState = () => {
 
     const newState: PetState = { ...petState, activeSymptom: symptom };
     setPetState(newState);
-    await savePetState(newState);
-  }, [petState, savePetState]);
+  }, [petState]);
 
   // =====================================
   // 8. 危険度レベルを現在のstatsから自動判定して更新
   // いずれかの病気が発症（threshold以上）していればwarning
   // いずれかがDANGER_THRESHOLD以上であればdanger
   // =====================================
-  const updateDeathRiskLevel = useCallback(async () => {
+  const updateDeathRiskLevel = useCallback(() => {
     const { stats } = petState;
     const diseaseTypes = Object.keys(stats) as DiseaseType[];
 
@@ -219,30 +224,27 @@ export const usePetState = () => {
 
     const newState: PetState = { ...petState, deathRiskLevel: level };
     setPetState(newState);
-    await savePetState(newState);
-  }, [petState, savePetState]);
+  }, [petState]);
 
   // =====================================
   // 9. ペットを死亡させる
   // =====================================
-  const killPet = useCallback(async () => {
+  const killPet = useCallback(() => {
     const newState: PetState = {
       ...petState,
       isAlive: false,
       mood: 'sick',
     };
     setPetState(newState);
-    await savePetState(newState);
-  }, [petState, savePetState]);
+  }, [petState]);
 
   // =====================================
   // 10. ペットを復活させる（リセット）
   // =====================================
-  const revivePet = useCallback(async () => {
+  const revivePet = useCallback(() => {
     const newState = createInitialPetState();
     setPetState(newState);
-    await savePetState(newState);
-  }, [savePetState]);
+  }, []);
 
   return {
     // 状態
