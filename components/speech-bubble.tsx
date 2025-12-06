@@ -7,7 +7,7 @@ type Props = {
 };
 
 // 統一された色設定
-const BUBBLE_BACKGROUND = '$background';
+const BUBBLE_BACKGROUND = '$color5'; // 優しいクリーム色
 
 export const SpeechBubble: React.FC<Props> = ({ Symptom }) => {
   const theme = useTheme();
@@ -35,15 +35,15 @@ export const SpeechBubble: React.FC<Props> = ({ Symptom }) => {
         minWidth={80}
         backgroundColor={BUBBLE_BACKGROUND}
         borderRadius="$4"
-        padding="$3"
         shadowColor="rgba(0, 0, 0, 0.1)"
         shadowOffset={{ width: 0, height: 2 }}
         shadowOpacity={0.8}
         shadowRadius={4}
         elevation={3}
+        padding="$3"
         alignItems="center"
         justifyContent="center">
-        <Text fontSize="$9" fontWeight="bold" color="$color">
+        <Text fontSize="$9" fontWeight="bold" color="#473C33">
           {Symptom.text}
         </Text>
       </YStack>
@@ -56,28 +56,13 @@ export const SpeechBubble: React.FC<Props> = ({ Symptom }) => {
         shadowOffset={{ width: 0, height: 2 }}
         shadowOpacity={0.8}
         shadowRadius={4}
-        elevation={2}
+        borderColor={BUBBLE_BACKGROUND}
         style={{
           borderLeftWidth: 8,
           borderRightWidth: 8,
-          borderTopWidth: 8,
+          borderTopWidth: 14,
           borderLeftColor: 'transparent',
           borderRightColor: 'transparent',
-          borderTopColor: backgroundColor,
-        }}
-      />
-
-      <YStack
-        marginTop={-16}
-        width={0}
-        height={0}
-        style={{
-          borderLeftWidth: 15,
-          borderRightWidth: 15,
-          borderTopWidth: 15,
-          borderLeftColor: 'transparent',
-          borderRightColor: 'transparent',
-          borderTopColor: backgroundColor,
         }}
       />
     </YStack>
