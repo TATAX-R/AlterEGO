@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { compressAndConvertToBase64 } from '@/utils/imageProcessor';
 import { fetchFoodAnalysis } from '@/services/gemini';
 import { FoodAnalysisResult } from '@/types';
+import { useRouter } from 'expo-router';
 // 撮影した画像のURIを保存するステート
 
 export const useFoodScan = () => {
   //画像のuriと分析結果を格納する状態管理を定義
+  const router = useRouter();
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [analysisResult, setAnalysisResult] = useState<FoodAnalysisResult | null>(null);
 
@@ -17,7 +19,7 @@ export const useFoodScan = () => {
   //ローディング状態管理
   const [isLoading, setIsLoading] = useState(false);
 
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(true);
   // ---実際の動作を行う関数を定義する---
   //カメラの使用許可&写真を4:3の比率で撮影
   const startCamera = async (): Promise<string> => {

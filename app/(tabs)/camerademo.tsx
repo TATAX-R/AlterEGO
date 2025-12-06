@@ -17,11 +17,22 @@ export default function App() {
     }
   };
   return (
-    <YStack backgroundColor="$blue10Light" h={800} alignContent="center" justifyContent="center">
-      <Text color="$backgroundPress" justifyContent="center" fontSize={30} fontWeight={800}>
+    <YStack
+      backgroundColor="$background"
+      h={800}
+      alignContent="center"
+      justifyContent="center"
+      alignItems="center">
+      <Text
+        color="white"
+        justifyContent="center"
+        alignContent="center"
+        fontSize={30}
+        style={{ marginBottom: 50 }}
+        fontWeight={800}>
         ホーム画面のつもり
       </Text>
-      <Button animation="bouncy" pressStyle={{ scale: 0.9 }} onPress={handlePress}>
+      <Button animation="bouncy" w={150} pressStyle={{ scale: 0.9 }} onPress={handlePress}>
         写真を撮る
       </Button>
     </YStack>

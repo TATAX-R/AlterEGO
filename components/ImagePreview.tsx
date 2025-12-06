@@ -5,7 +5,14 @@ export default function ImagePreview({ imageUri }: { imageUri: string }) {
   return (
     <>
       <YStack>
-        <Image source={{ uri: imageUri }} style={styles.image} />
+        <Image
+          source={{ uri: imageUri }}
+          width={300}
+          height={250}
+          borderWidth={3}
+          borderColor="black"
+          borderRadius={20}
+        />
       </YStack>
     </>
   );

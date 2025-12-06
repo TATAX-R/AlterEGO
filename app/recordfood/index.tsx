@@ -1,11 +1,9 @@
-import { Button, Text, XStack, YStack, Image } from 'tamagui';
-import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { Button, Text, XStack, YStack, Image, Spinner } from 'tamagui';
 import { useFoodScan } from '@/hooks/useFoodScan';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
-import ImagePreviewModalComponent from '@/components/ImagePreviewModal';
 import ImagePreview from '@/components/ImagePreview';
-import BackHomeButton from '@/components/BackHomeButton';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function App() {
   const { imageUriFirst } = useLocalSearchParams();
@@ -13,7 +11,9 @@ export default function App() {
     //Modal States
     isLoading,
     imageUri,
+    isSuccess,
     //Functions
+    setIsSuccess,
     startCamera,
     executeAnalysis,
     setImageUri,
@@ -29,18 +29,20 @@ export default function App() {
 
   const router = useRouter();
   return (
-    <YStack h={800} backgroundColor="$background" alignItems="center" justifyContent="center">
+    <YStack h={900} backgroundColor="$background" alignItems="center" justifyContent="center">
       <Stack.Screen
         options={{
-          title: '食事を記録する',
-          headerBackTitle: '戻る',
+          headerShown: false,
+          gestureEnabled: true,
         }}
       />
       <Text fontWeight={800}>ここにペットのアニメーションを置く</Text>
       {imageUri && <ImagePreview imageUri={Array.isArray(imageUri) ? imageUri[0] : imageUri} />}
       {/* isLoadingがfalseのときのみ表示 */}
-      {!isLoading && (
+      {!isLoading && isSuccess === true && (
         <Button
+          icon={<MaterialCommunityIcons name="silverware-fork-knife" size={24} color="white" />}
+          style={styles.button}
           onPress={async () => {
             setIsLoading(true);
             const validUri = Array.isArray(imageUri) ? imageUri[0] : imageUri;
@@ -52,8 +54,10 @@ export default function App() {
                 setIsLoading(false);
                 const stringResult = JSON.stringify(result);
                 if (result.isFood === false) {
+                  setIsSuccess(false);
                   return;
                 }
+                setIsSuccess(true);
                 router.push({
                   pathname: '/recordfood/resultfood',
                   params: { response: stringResult },
@@ -68,15 +72,41 @@ export default function App() {
       )}
       {!isLoading && (
         <Button
+          icon={<Ionicons name="camera" size={24} color="white" />}
+          style={styles.button}
           onPress={async () => {
             const img = await startCamera();
-
+            setIsSuccess(true);
             setImageUri(img);
           }}>
           撮影し直す
         </Button>
       )}
-      {isLoading && <Text>解析中...</Text>}
+      {isLoading && (
+        <XStack alignItems="center" style={styles.marginTop}>
+          <Spinner size="large" color="white" style={{ marginRight: 10 }} />
+          <Text fontSize={20}>解析中...</Text>
+        </XStack>
+      )}
+      {isSuccess === false && !isLoading && (
+        <Text fontSize={16} color="red" style={styles.text}>
+          これは食べ物ではないようです。 {'\n'}別の写真を試してください。
+        </Text>
+      )}
     </YStack>
   );
 }
+
+const styles = {
+  button: {
+    margin: 5,
+    width: 200,
+  },
+  marginTop: {
+    marginTop: 20,
+  },
+  text: {
+    padding: 20,
+    alignItems: 'center',
+  },
+};
