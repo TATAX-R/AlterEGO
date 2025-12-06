@@ -75,7 +75,7 @@ export const PetNameEditModal = ({ visible, currentName, onClose, onSave }: Prop
             <TouchableOpacity
               style={[styles.button, styles.buttonCancel]}
               onPress={onClose}
-              accessibilityLabel="キャンセルボタン"
+              accessibilityLabel="キャンセル"
               accessibilityRole="button">
               <Text style={styles.textCancel}>キャンセル</Text>
             </TouchableOpacity>
@@ -83,7 +83,7 @@ export const PetNameEditModal = ({ visible, currentName, onClose, onSave }: Prop
             <TouchableOpacity
               style={[styles.button, styles.buttonSave]}
               onPress={handleSave}
-              accessibilityLabel="保存ボタン"
+              accessibilityLabel="保存"
               accessibilityRole="button">
               <Text style={styles.textSave}>保存</Text>
             </TouchableOpacity>
