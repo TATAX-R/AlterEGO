@@ -1,63 +1,81 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import React from 'react';
+import { useWindowDimensions } from 'react-native';
+import { YStack, useTheme, Text, Circle } from 'tamagui';
+import Svg, { Path } from 'react-native-svg';
 
-import { MaterialIcons } from '@expo/vector-icons';
+/**
+ * キャラクターのプレースホルダー
+ * 実際の実装時はここをSVGコンポーネントなどに置き換えてください
+ */
+const CharacterPlaceholder = () => {
+  return (
+    <YStack alignItems="center" justifyContent="center" gap="$2">
+      {/* キャラクターの仮の姿 */}
+      <Circle size={100} backgroundColor="$red10" elevation="$4" />
+      <Text color="white" fontSize="$3" fontWeight="bold">
+        Character
+      </Text>
+    </YStack>
+  );
+};
 
-import { usePetName } from '@/hooks/usePetName';
-import { PetNameEditModal } from '@/components/PetName/PetNameEditModal';
+/**
+ * 曲線の地面を描画するコンポーネント
+ * @param color - 地面の色（Themeから取得）
+ * @param height - 地面のエリアの高さ
+ */
+const CurveGround = ({ color, height }: { color: string; height: number }) => {
+  const { width } = useWindowDimensions();
 
-export default function Index() {
-  const { petName, updatePetName } = usePetName();
-  const [isModalVisible, setModalVisible] = useState(false);
+  // ベジェ曲線の定義
+  // M=Move to, Q=Quadratic Bezier (制御点x y, 終点x y), L=Line to, Z=Close path
+  // 画面左端(0, 50)からスタートし、
+  // 中央上部(width/2, 0)を制御点として、
+  // 右端(width, 50)へカーブを描き、
+  // その後下部を埋めるパスです。
+  const pathData = `
+    M 0 ${height * 0.3}
+    Q ${width / 2} 0 ${width} ${height * 0.3}
+    L ${width} ${height}
+    L 0 ${height}
+    Z
+  `;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.petHeader}>
-        <View style={styles.labelRow}>
-          <Text style={styles.label}>Your Pet Name</Text>
-          <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.editButton}>
-            <MaterialIcons name="edit" size={16} color="#888" />
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.petNameText}>{petName}</Text>
-      </View>
+    <Svg height={height} width={width} style={{ position: 'absolute', bottom: 0 }}>
+      <Path d={pathData} fill={color} />
+    </Svg>
+  );
+};
 
-      <PetNameEditModal
-        visible={isModalVisible}
-        currentName={petName}
-        onClose={() => setModalVisible(false)}
-        onSave={(newName) => updatePetName(newName)}
-      />
-    </View>
+export default function WorldScreen() {
+  const theme = useTheme();
+
+  // Theme Builderの定義に従って色を取得
+  // .get() を使うことで、CSS変数やRawのカラーコード文字列を取り出せます(SVGで使うため)
+  const skyColor = theme.color5.get();
+  const groundColor = theme.background.get();
+
+  // 地面エリアの高さ設定
+  const GROUND_HEIGHT = 200;
+
+  return (
+    <YStack
+      flex={1}
+      backgroundColor={skyColor} // 全体の背景＝空
+      justifyContent="flex-end" // コンテンツを下に寄せる
+      alignItems="center" // 水平方向中央揃え
+      position="relative">
+      {/* キャラクター
+        地面の曲線の上に立つようにマージンで調整
+        (地面の高さ - 曲線の頂点までのオフセット分だけ上げるイメージ)
+      */}
+      <YStack marginBottom={GROUND_HEIGHT * 0.2} zIndex={1}>
+        <CharacterPlaceholder />
+      </YStack>
+
+      {/* 地面 (絶対配置で最下部に固定) */}
+      <CurveGround color={groundColor} height={GROUND_HEIGHT} />
+    </YStack>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
-    paddingTop: 60,
-  },
-  petHeader: {
-    backgroundColor: '#F8F9FA',
-    padding: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  labelRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-    gap: 6,
-  },
-  label: {
-    fontSize: 12,
-    color: '#888',
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-  },
-  petNameText: { fontSize: 24, fontWeight: 'bold', color: '#333' },
-  editButton: { padding: 4 },
-});

@@ -22,9 +22,21 @@ export default function RootLayout() {
   return (
     <TamaguiProvider config={config} defaultTheme="light">
       <ThemeProvider value={DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="index" options={{ title: 'Home' }} />
-          {<Stack.Screen name="(tabs)" options={{ headerShown: false }} />}
+        <Stack
+          // ここを追加: 全画面の背景色を透明にして、index.tsxの色を表示させる
+          screenOptions={{
+            contentStyle: { backgroundColor: 'transparent' },
+            headerShown: false, // デフォルトでヘッダーを非表示にする
+          }}>
+          {/* indexの設定: titleは不要になり、headerShown: falseを明示 */}
+          <Stack.Screen
+            name="index"
+            options={{
+              headerShown: false, // ここが重要！ヘッダーを消す
+            }}
+          />
+
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack>
 
         <StatusBar style="auto" />
