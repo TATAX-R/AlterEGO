@@ -25,6 +25,7 @@
     "@tamagui/config": "^1.138.6",
     "@tamagui/dialog": "^1.138.6",
     "@tamagui/font-inter": "^1.138.6",
+    "@tamagui/lucide-icons": "^1.138.6",
     "@tamagui/metro-plugin": "^1.138.6",
     "@tamagui/shorthands": "^1.138.6",
     "@tamagui/theme-builder": "^1.138.6",
