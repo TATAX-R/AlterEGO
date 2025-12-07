@@ -1,21 +1,34 @@
 // components/StepCounter/StepMessage.tsx
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { StepData } from '@/types';
+import { Text } from 'tamagui';
 
 type StepMessageProps = {
-  isGoalReached: boolean;
+  stepData: StepData;
 };
 
-export const StepMessage = ({ isGoalReached }: StepMessageProps) => {
-  return <Text style={styles.message}>{isGoalReached ? '目標達成！🎉' : 'もっと歩こう...'}</Text>;
+const getStepMessage = (progress: number): string => {
+  if (progress >= 1) {
+    return '目標達成！';
+  } else if (progress >= 0.75) {
+    return 'ラストスパート!';
+  } else if (progress >= 0.5) {
+    return 'あと半分!';
+  } else if (progress >= 0.25) {
+    return '順調だね!';
+  } else {
+    return 'まだまだ歩こう!';
+  }
 };
 
-const styles = StyleSheet.create({
-  message: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginTop: 60,
-    marginBottom: 20,
-    color: '#444',
-  },
-});
+export const StepMessage = ({ stepData }: StepMessageProps) => {
+  const progress = stepData.todaySteps / stepData.targetSteps;
+
+  const message = getStepMessage(progress);
+
+  return (
+    <Text fontSize={30} fontWeight="bold" marginTop={60} marginBottom={20} color='$color6'>
+      {message}
+    </Text>
+  );
+};

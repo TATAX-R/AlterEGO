@@ -254,6 +254,17 @@ export const usePetState = () => {
     setPetState(newState);
   }, []);
 
+  // =====================================
+  // 11. 誕生日を直接設定（デバッグ用：日数を代入するため）
+  // =====================================
+  const setBirthDate = useCallback(
+    (date: Date) => {
+      const newState: PetState = { ...petState, birthDate: date };
+      setPetState(newState);
+    },
+    [petState]
+  );
+
   return {
     // 状態
     petState,
@@ -270,6 +281,7 @@ export const usePetState = () => {
     updateDeathRiskLevel,
     killPet,
     revivePet,
+    setBirthDate, // デバッグ用
   };
 };
 

@@ -14,8 +14,8 @@ export const useStepCounter = (options: UseStepCounterOptions = {}) => {
   const [isPedometerAvailable, setIsPedometerAvailable] = useState<boolean | null>(null); //スマホに歩数計センサーがついているかの判定結果
   const appState = useRef(AppState.currentState);
 
-  // 進捗率を計算（0〜100%）
-  const progress = Math.min((todaySteps / targetSteps) * 100, 100);
+  // 進捗率を計算（0〜100%）※整数に丸める（React Native Fabricの精度エラー防止）
+  const progress = Math.round(Math.min((todaySteps / targetSteps) * 100, 100));
 
   // 歩数データをStepData型で返す
   const stepData: StepData = {
