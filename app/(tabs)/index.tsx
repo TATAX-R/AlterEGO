@@ -1,11 +1,14 @@
 import React from 'react';
 import { useWindowDimensions } from 'react-native';
-import { ZStack, YStack, useTheme } from 'tamagui';
+import { YStack, useTheme } from 'tamagui';
 import Svg, { Path } from 'react-native-svg';
 import LottieView from 'lottie-react-native';
 import { LinearGradient } from '@tamagui/linear-gradient';
 
 import BootCameraButton from '@/components/BootCameraButton';
+import { SpeechBubble } from '@/components/speech-bubble';
+import { usePetStateContext } from '@/hooks/usePetState';
+import { diseaseData } from '@/constants/diseases';
 
 /**
  * 曲線の地面を描画するコンポーネント
@@ -30,12 +33,23 @@ const CurveGround = ({ color, height }: { color: string; height: number }) => {
   );
 };
 
+// デフォルトの症状（健康な時）
+const DEFAULT_SYMPTOM = {
+  id: 'healthy',
+  text: '今日も元気！',
+  tipsTitle: '健康',
+  tipsContent: '今日も元気いっぱい！この調子で健康的な生活を続けましょう！',
+};
+
 export default function WorldScreen() {
   const theme = useTheme();
+  const { petState } = usePetStateContext();
 
   const groundColor = theme.background.get();
-
   const GROUND_HEIGHT = 220;
+
+  // 表示する症状（activeSymptomがあればそれを使用、なければデフォルト）
+  const displaySymptom = petState.activeSymptom || DEFAULT_SYMPTOM;
 
   return (
     <YStack flex={1} backgroundColor="#45E6E6" position="relative" justifyContent="center">
@@ -49,6 +63,12 @@ export default function WorldScreen() {
         right={0}
         bottom={0}
       />
+
+      {/* 吹き出し */}
+      <YStack position="absolute" top={200} left={0} right={0} zIndex={10} alignItems="center">
+        <SpeechBubble symptom={displaySymptom} />
+      </YStack>
+
       <YStack
         position="absolute"
         width="100%"
