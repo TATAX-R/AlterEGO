@@ -1,5 +1,5 @@
 import { Text, XStack, YStack } from 'tamagui';
-import { usePetState } from '@/hooks/usePetState';
+import { usePetStateContext } from '@/hooks/usePetState';
 import LottieView from 'lottie-react-native';
 import RadarChartView from '@/components/radar-chart';
 import { StyleSheet } from 'react-native';
@@ -21,7 +21,7 @@ export default function HealthScreen() {
     updateDeathRiskLevel,
     killPet,
     revivePet,
-  } = usePetState();
+  } = usePetStateContext();
   const safeMessage = 'とてもげんきです！';
   const warningMessage = 'どこかに不調があるかもしれません...';
   const dangerMessage = '危険な状態です';
