@@ -7,6 +7,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { usePetName } from '@/hooks/usePetName';
 import { PetNameEditModal } from '@/components/PetName/PetNameEditModal';
 
+import BootCameraButton from '@/components/BootCameraButton';
+import { YStack } from 'tamagui';
+
 export default function HomeScreen() {
   const { petName, updatePetName } = usePetName();
   const [isModalVisible, setModalVisible] = useState(false);
@@ -23,6 +26,8 @@ export default function HomeScreen() {
         </View>
         <Text style={styles.petNameText}>{petName}</Text>
       </View>
+
+      <BootCameraButton />
 
       {/* 名前編集モーダル */}
       <PetNameEditModal

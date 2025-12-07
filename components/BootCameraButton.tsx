@@ -17,8 +17,16 @@ export default function BootCameraButton() {
     }
   };
   return (
-    <YStack>
-      <Button animation="bouncy" w={150} pressStyle={{ scale: 0.9 }} onPress={handlePress}>
+    <YStack h="100%">
+      <Button
+        animation="bouncy"
+        w={150}
+        pressStyle={{ scale: 0.9 }}
+        onPress={handlePress}
+        zIndex={2}
+        position="absolute"
+        bottom="5%"
+        right="30%">
         たべさせる
       </Button>
     </YStack>

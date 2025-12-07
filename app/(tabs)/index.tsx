@@ -1,9 +1,11 @@
 import React from 'react';
 import { useWindowDimensions } from 'react-native';
-import { YStack, useTheme } from 'tamagui';
+import { ZStack, YStack, useTheme } from 'tamagui';
 import Svg, { Path } from 'react-native-svg';
 import LottieView from 'lottie-react-native';
 import { LinearGradient } from '@tamagui/linear-gradient';
+
+import BootCameraButton from '@/components/BootCameraButton';
 
 /**
  * 曲線の地面を描画するコンポーネント
@@ -36,7 +38,7 @@ export default function WorldScreen() {
   const GROUND_HEIGHT = 220;
 
   return (
-    <YStack flex={1} backgroundColor="#45E6E6" position="relative">
+    <YStack flex={1} backgroundColor="#45E6E6" position="relative" justifyContent="center">
       <LinearGradient
         colors={['#45E6E6', '#FFE4C4']}
         start={{ x: 0, y: 0 }}
@@ -62,6 +64,8 @@ export default function WorldScreen() {
           resizeMode="contain"
         />
       </YStack>
+
+      <BootCameraButton />
 
       <CurveGround color={groundColor} height={GROUND_HEIGHT} />
     </YStack>

@@ -26,7 +26,6 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <Footprints size={28} color={color} />,
         }}
       />
-
       <Tabs.Screen
         name="index"
         options={{
@@ -34,7 +33,6 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <Home size={28} color={color} />,
         }}
       />
-
       <Tabs.Screen
         name="health"
         options={{
@@ -42,13 +40,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <ActivitySquare size={28} color={color} />,
         }}
       />
-      <Tabs.Screen
-        name="camerademo"
-        options={{
-          title: 'CameraDemo',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
+      r
     </Tabs>
   );
 }
