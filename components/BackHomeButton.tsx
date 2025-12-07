@@ -11,6 +11,8 @@ export default function BackHomeButton({ result }: { result: FoodAnalysisResult 
     <Button
       margin={10}
       w="100%"
+      position="absolute"
+      bottom={20}
       backgroundColor="$color1"
       shadowColor="#fff"
       shadowOffset={{ width: 2, height: 2 }}
