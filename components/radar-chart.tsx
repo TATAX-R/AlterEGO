@@ -167,7 +167,10 @@ export default function RadarChartView({ stats }: RadarChartViewProps) {
       {selectedDisease && (
         <Modal
           open={isOpen}
-          onOpenChange={setIsOpen}
+          onOpenChange={(open) => {
+            setIsOpen(open);
+            if (!open) setSelectedDisease(null);
+          }}
           tipsTitle={selectedDisease.name}
           tipsContent={selectedDisease.tips}
         />
