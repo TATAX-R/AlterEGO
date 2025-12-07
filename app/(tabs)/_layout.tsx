@@ -1,42 +1,46 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
+import { useTheme } from 'tamagui';
+import { Home, Footprints, ActivitySquare } from '@tamagui/lucide-icons';
 
 import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const theme = useTheme();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarStyle: {
+          backgroundColor: theme.color2.val,
+          borderTopColor: theme.borderColor?.val ?? theme.color2.val,
+        },
+        tabBarActiveTintColor: theme.color.val,
         headerShown: false,
         tabBarButton: HapticTab,
       }}>
       <Tabs.Screen
+        name="steps/index"
+        options={{
+          title: 'Steps',
+          tabBarIcon: ({ color }) => <Footprints size={28} color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color }) => <Home size={28} color={color} />,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="health"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Health',
+          tabBarIcon: ({ color }) => <ActivitySquare size={28} color={color} />,
         }}
       />
-      <Tabs.Screen
-        name="camerademo"
-        options={{
-          title: 'CameraDemo',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
+      r
     </Tabs>
   );
 }
