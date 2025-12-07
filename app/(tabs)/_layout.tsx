@@ -42,6 +42,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <ActivitySquare size={28} color={color} />,
         }}
       />
+      <Tabs.Screen
+        name="camerademo"
+        options={{
+          title: 'CameraDemo',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+        }}
+      />
     </Tabs>
   );
 }
