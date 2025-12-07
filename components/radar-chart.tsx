@@ -5,6 +5,7 @@ import { useFocusEffect } from 'expo-router';
 
 import { DiseaseType, HealthStats } from '@/types/index';
 import { diseaseData, DISEASE_KEYS } from '@/constants/diseases';
+import { Modal } from '@/components/modal';
 
 interface CustomRadarChartProps {
   data: number[];
@@ -92,8 +93,8 @@ function CustomRadarChart({
           <Polygon
             key={i}
             points={getPolygonPoints(level)}
-            stroke={level === 1 ? '#919191ff' : '#e1e1e1ff'}
-            strokeWidth={1}
+            stroke={level === 1 ? '#919191ff' : level === 0.5 ? '#fcc7c7ff' : '#e1e1e1ff'}
+            strokeWidth={level === 0.5 ? 1.5 : 1}
             fill={level === 1 ? '#fcc7c7ff' : '#ffffffff'}
           />
         ))}
@@ -145,6 +146,10 @@ interface RadarChartViewProps {
 export default function RadarChartView({ stats }: RadarChartViewProps) {
   const data = DISEASE_KEYS.map((key) => stats[key]);
   const displayLabels = DISEASE_KEYS.map((key) => diseaseData[key].name);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedDisease, setSelectedDisease] = useState<{ name: string; tips: string } | null>(
+    null
+  );
 
   return (
     <View style={styles.container}>
@@ -155,11 +160,21 @@ export default function RadarChartView({ stats }: RadarChartViewProps) {
         maxValue={100}
         onLabelPress={(key) => {
           const diseaseInfo = diseaseData[key];
-          console.log('ID:', diseaseInfo.id);
-          console.log('名前:', diseaseInfo.name);
-          console.log('Tips:', diseaseInfo.tips);
+          setSelectedDisease({ name: diseaseInfo.name, tips: diseaseInfo.tips });
+          setIsOpen(true);
         }}
       />
+      {selectedDisease && (
+        <Modal
+          open={isOpen}
+          onOpenChange={(open) => {
+            setIsOpen(open);
+            if (!open) setSelectedDisease(null);
+          }}
+          tipsTitle={selectedDisease.name}
+          tipsContent={selectedDisease.tips}
+        />
+      )}
     </View>
   );
 }
