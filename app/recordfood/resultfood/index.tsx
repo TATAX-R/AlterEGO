@@ -1,13 +1,15 @@
 import { Text, XStack, YStack, H2 } from 'tamagui';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { FoodAnalysisResult } from '@/types';
-import { StyleSheet } from 'react-native';
 import BackHomeButton from '@/components/BackHomeButton';
 import { SimpleGauge } from '@/components/SimpleGauge';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import LottieView from 'lottie-react-native';
+import { usePetState } from '@/hooks/usePetState';
 
 export default function App() {
   const { response, imgUri } = useLocalSearchParams();
+  const { updateStats, petState } = usePetState();
   const result: FoodAnalysisResult = JSON.parse(Array.isArray(response) ? response[0] : response);
   const SimpleGaugeTextSize = 15;
   return (
@@ -18,9 +20,21 @@ export default function App() {
           gestureEnabled: false,
         }}
       />
-      <XStack h={50} />
+      <XStack h={370} />
 
-      <YStack h={250} />
+      <LottieView
+        source={require('@/assets/lottie/pig-happy.json')}
+        style={{
+          width: '100%',
+          height: '100%',
+          position: 'absolute',
+          top: '-16%',
+          alignItems: 'center',
+        }}
+        autoPlay
+        loop
+      />
+
       <YStack
         gap="$2"
         padding="$6"
@@ -93,7 +107,7 @@ export default function App() {
         </XStack>
       </YStack>
 
-      <BackHomeButton />
+      <BackHomeButton result={result} />
     </YStack>
   );
 }

@@ -5,6 +5,7 @@ import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
 import { Alert } from 'react-native';
 import ImagePreview from '@/components/ImagePreview';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import LottieView from 'lottie-react-native';
 
 export default function App() {
   const { imageUriFirst } = useLocalSearchParams();
@@ -37,7 +38,18 @@ export default function App() {
           gestureEnabled: true,
         }}
       />
-      <Text fontWeight={800}>ここにペットのアニメーションを置く</Text>
+      <LottieView
+        source={require('@/assets/lottie/pig-food.json')}
+        style={{
+          width: '100%',
+          height: '100%',
+          position: 'absolute',
+          top: '-25%',
+          alignItems: 'center',
+        }}
+        autoPlay
+        loop
+      />
       {imageUri && !isLoading && (
         <ImagePreview imageUri={Array.isArray(imageUri) ? imageUri[0] : imageUri} />
       )}

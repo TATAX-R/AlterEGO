@@ -25,7 +25,13 @@ export default function BootCameraButton() {
         onPress={handlePress}
         zIndex={2}
         position="absolute"
+        backgroundColor="$accent2"
+        borderColor="white"
+        borderWidth={0.5}
+        fontSize={16}
+        fontWeight={'bold'}
         bottom="5%"
+        color="white"
         right="30%">
         たべさせる
       </Button>
