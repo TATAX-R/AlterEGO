@@ -16,7 +16,6 @@ export const PetSurvivalDays: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>生存日数</Text>
       <View style={styles.daysContainer}>
         <Text style={styles.daysNumber}>{survivalDays}</Text>
         <Text style={styles.daysUnit}>日目</Text>

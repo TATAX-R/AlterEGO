@@ -7,7 +7,7 @@ const STORAGE_KEY = 'pet_name_data'; // 保存キー
 
 export const usePetName = () => {
   // 初期値（プレースホルダー）
-  const [petName, setPetName] = useState('タタックス');
+  const [petName, setPetName] = useState('オルター');
 
   // 1. 初回起動時に保存された名前を読み込む
   useEffect(() => {
