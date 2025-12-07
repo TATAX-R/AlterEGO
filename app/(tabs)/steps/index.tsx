@@ -35,12 +35,8 @@ const CurveGround = ({ color, height }: { color: string; height: number }) => {
 
 export default function StepsScreen() {
   const { stepData, progress } = useStepCounter();
-  const theme = useTheme();
   const groundColor = '#8B8B8B'; // コンクリート風の灰色
-  const GROUND_HEIGHT = 110;
-
-  // グラデーション用の色（accent系の緑）
-  const gradientColors = ['#81C784', '#A5D6A7', '#C8E6C9'] as const; // 上が濃い → 下が薄い
+  const GROUND_HEIGHT = 55;
 
   // AndroidのExpo Goでは歩数計が利用できない
   if (Platform.OS === 'android') {
@@ -68,9 +64,9 @@ export default function StepsScreen() {
         alignItems="center"
         position="relative"
         overflow="hidden">
-        {/* グラデーション背景（上が濃い） */}
+        {/* グラデーション背景（上が濃い：$accent5 → 下が薄い：$accent1） */}
         <LinearGradient
-          colors={[...gradientColors]}
+          colors={['$accent5', '$accent3', '$accent1']}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
           position="absolute"
@@ -85,19 +81,34 @@ export default function StepsScreen() {
           source={require('@/assets/lottie/pig-walk.json')}
           autoPlay
           loop
-          style={{ width: 450, height: 450, marginBottom: 20, zIndex: 1 }}
+          style={{ width: 450, height: 450, marginBottom: -35, zIndex: 1 }}
         />
 
         {/* 曲線の地面 */}
         <CurveGround color={groundColor} height={GROUND_HEIGHT} />
       </YStack>
 
-      {/* 区切り線 */}
-      <YStack width="100%" height={2} backgroundColor="$borderColor" />
-
       {/* 下部エリア（パディングあり） */}
-      <YStack paddingHorizontal={20} paddingBottom={20} width="100%" alignItems="center">
-        <StepCount stepData={stepData} />
+      <YStack
+        paddingHorizontal={20}
+        paddingTop={0}
+        paddingBottom={0}
+        width="100%"
+        alignItems="center"
+        backgroundColor={groundColor}>
+        {/* 歩数表示（ボーダー付き） */}
+        <YStack
+          borderWidth={2}
+          borderColor="$accent8"
+          borderRadius="$4"
+          marginTop={20}
+          paddingTop="$4"
+          paddingHorizontal="$4"
+          paddingBottom="$1"
+          backgroundColor="#9e9e9e">
+          <StepCount stepData={stepData} />
+        </YStack>
+        <YStack h={20} />
       </YStack>
     </YStack>
   );
