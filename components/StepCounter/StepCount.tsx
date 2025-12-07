@@ -50,13 +50,13 @@ export const StepCount = ({ stepData }: StepCountProps) => {
 
   return (
     <YStack alignItems="center" justifyContent="center" marginBottom={40} animation="lazy">
-      <Text fontSize={48} fontWeight="bold" color='$color6' animation="lazy">
+      <Text fontSize={48} fontWeight="bold" color="$color6" animation="lazy">
         {stepDataState.toLocaleString()}
       </Text>
       <Svg height="2" width="200" style={{ marginVertical: 8 }}>
-        <Line x1="0" y1="1" x2="200" y2="1" stroke="#666" strokeWidth="2" />
+        <Line x1="0" y1="1" x2="200" y2="1" stroke="#FFFFFF" strokeWidth="2" />
       </Svg>
-      <Text fontSize={18} color="$color6">
+      <Text fontSize={24} color="$color6">
         {stepData.targetSteps.toLocaleString()} 歩
       </Text>
     </YStack>
