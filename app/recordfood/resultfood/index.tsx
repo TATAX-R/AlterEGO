@@ -44,6 +44,8 @@ export default function App() {
         borderRadius={16}
         alignContent="center"
         shadowColor="#ffff"
+        position="absolute"
+        top="45%"
         backgroundColor="$color2">
         <XStack justifyContent="center" alignItems="center">
           <H2 alignContent="center" mb="$3">
@@ -106,7 +108,7 @@ export default function App() {
           <Text px="$3">{result.message}</Text>
         </XStack>
       </YStack>
-
+      <YStack h={200} />
       <BackHomeButton result={result} />
     </YStack>
   );

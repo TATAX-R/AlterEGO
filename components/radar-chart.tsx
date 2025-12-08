@@ -2,9 +2,9 @@ import React, { useState, useCallback, useRef } from 'react';
 import { Text, TouchableOpacity, View, StyleSheet, Animated, Easing } from 'react-native';
 import Svg, { Polygon, Line } from 'react-native-svg';
 import { useFocusEffect } from 'expo-router';
-
 import { DiseaseType, HealthStats } from '@/types/index';
 import { diseaseData, DISEASE_KEYS } from '@/constants/diseases';
+import { Modal } from './modal';
 
 interface CustomRadarChartProps {
   data: number[];
@@ -145,7 +145,8 @@ interface RadarChartViewProps {
 export default function RadarChartView({ stats }: RadarChartViewProps) {
   const data = DISEASE_KEYS.map((key) => stats[key]);
   const displayLabels = DISEASE_KEYS.map((key) => diseaseData[key].name);
-
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedKey, setSelectedKey] = useState<DiseaseType | null>(null);
   return (
     <View style={styles.container}>
       <CustomRadarChart
@@ -155,10 +156,18 @@ export default function RadarChartView({ stats }: RadarChartViewProps) {
         maxValue={100}
         onLabelPress={(key) => {
           const diseaseInfo = diseaseData[key];
+          setSelectedKey(key);
+          setIsOpen(true);
           console.log('ID:', diseaseInfo.id);
           console.log('名前:', diseaseInfo.name);
-          console.log('Tips:', diseaseInfo.tips);
         }}
+      />
+      <Modal
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        // selectedKey がある場合のみタイトルと内容を渡す（なければ空文字）
+        tipsTitle={selectedKey ? diseaseData[selectedKey].name : ''}
+        tipsContent={selectedKey ? diseaseData[selectedKey].tips : ''}
       />
     </View>
   );
@@ -167,8 +176,9 @@ export default function RadarChartView({ stats }: RadarChartViewProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    position: 'absolute',
+    top: '55%',
+    alignSelf: 'center',
   },
   labelTouchable: {
     padding: 8,
@@ -176,8 +186,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   labelText: {
-    color: '#333',
+    color: '#fff',
     fontWeight: '600',
-    fontSize: 15,
+    fontSize: 17.3,
   },
 });
