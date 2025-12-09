@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 import { useTheme } from 'tamagui';
-import { Home, Footprints, ActivitySquare } from '@tamagui/lucide-icons';
+import { Home, Footprints, ActivitySquare, Bug } from '@tamagui/lucide-icons';
 
 import { HapticTab } from '@/components/haptic-tab';
 
@@ -40,7 +40,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <ActivitySquare size={28} color={color} />,
         }}
       />
-      r
+      <Tabs.Screen
+        name="Pet-debug"
+        options={{
+          title: 'Debug',
+          tabBarIcon: ({ color }) => <Bug size={28} color={color} />,
+        }}
+      />
     </Tabs>
   );
 }
