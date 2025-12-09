@@ -1,20 +1,19 @@
 import React from 'react';
-import { YStack, Text, useTheme } from 'tamagui';
+import { YStack, Text } from 'tamagui';
 import { Symptom } from '@/types';
 
 type Props = {
   symptom: Symptom;
+  onPress?: () => void;
 };
 
 // 統一された色設定
 const BUBBLE_BACKGROUND = '$color5'; // 優しいクリーム色
 
-export const SpeechBubble: React.FC<Props> = ({ symptom }) => {
-  const theme = useTheme();
-  const backgroundColor = theme.background.val;
-
+export const SpeechBubble: React.FC<Props> = ({ symptom, onPress }) => {
   const handlePress = () => {
     console.log(symptom.tipsTitle, symptom.tipsContent);
+    onPress?.();
   };
 
   return (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useWindowDimensions } from 'react-native';
-import { ZStack, YStack, useTheme, Text, XStack } from 'tamagui';
+import { YStack, useTheme, Text, XStack } from 'tamagui';
 import Svg, { Path } from 'react-native-svg';
 import LottieView from 'lottie-react-native';
 import { LinearGradient } from '@tamagui/linear-gradient';
@@ -9,8 +9,20 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { PetSurvivalDays } from '@/components/PetSurvivalDays';
 import { PetNameEditModal } from '@/components/PetName/PetNameEditModal';
 import { usePetName } from '@/hooks/usePetName';
+import { usePetStateContext } from '@/hooks/usePetState';
+import { SpeechBubble } from '@/components/speech-bubble';
+import { Modal } from '@/components/modal';
+import { Symptom } from '@/types';
 
 import BootCameraButton from '@/components/BootCameraButton';
+
+// デフォルトの健康メッセージ
+const DEFAULT_SYMPTOM: Symptom = {
+  id: 'healthy',
+  text: '今日も元気！',
+  tipsTitle: '健康状態',
+  tipsContent: 'ペットはとても元気です！この調子で健康的な食生活を続けましょう。',
+};
 
 /**
  * 曲線の地面を描画するコンポーネント
@@ -38,7 +50,12 @@ const CurveGround = ({ color, height }: { color: string; height: number }) => {
 export default function WorldScreen() {
   const theme = useTheme();
   const { petName, updatePetName } = usePetName();
+  const { petState } = usePetStateContext();
   const [isNameModalVisible, setIsNameModalVisible] = useState(false);
+  const [isTipsModalOpen, setIsTipsModalOpen] = useState(false);
+
+  // 現在の症状（activeSymptomがなければデフォルト）
+  const currentSymptom = petState.activeSymptom ?? DEFAULT_SYMPTOM;
 
   const groundColor = theme.background.get();
 
@@ -125,6 +142,19 @@ export default function WorldScreen() {
       </YStack>
 
       <BootCameraButton />
+
+      {/* 吹き出し */}
+      <YStack position="absolute" top={280} left={0} right={0} alignItems="center" zIndex={15}>
+        <SpeechBubble symptom={currentSymptom} onPress={() => setIsTipsModalOpen(true)} />
+      </YStack>
+
+      {/* Tips モーダル */}
+      <Modal
+        open={isTipsModalOpen}
+        onOpenChange={setIsTipsModalOpen}
+        tipsTitle={currentSymptom.tipsTitle}
+        tipsContent={currentSymptom.tipsContent}
+      />
 
       <CurveGround color={groundColor} height={GROUND_HEIGHT} />
     </YStack>
