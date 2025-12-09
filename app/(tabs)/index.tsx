@@ -144,7 +144,7 @@ export default function WorldScreen() {
       <BootCameraButton />
 
       {/* 吹き出し */}
-      <YStack position="absolute" top={280} left={0} right={0} alignItems="center" zIndex={15}>
+      <YStack position="absolute" top={230} left={0} right={0} alignItems="center" zIndex={15}>
         <SpeechBubble symptom={currentSymptom} onPress={() => setIsTipsModalOpen(true)} />
       </YStack>
 
